@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import { Login } from "./pages";
+
 
 function App() {
   return (
-    <div className="App">
-      {console.log('oi')}
-    </div>
+    <Switch>
+      <Route exact path="/teste" component={ Login } />
+    </Switch>
   );
 }
 
