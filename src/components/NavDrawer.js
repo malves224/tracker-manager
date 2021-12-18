@@ -1,24 +1,16 @@
 import * as React from "react";
+import ItemsNav from "./ItemsNav";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import { Collapse } from "@mui/material";
 
 const drawerWidth = 240;
-
-const limitDividerMenu = 4;
 
 const itemsMenu = [
   {
@@ -55,75 +47,10 @@ const itemsMenu = [
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [dropwdownOpen, setdropwdownOpen] = React.useState({
-    clientes: false,
-    veiculos: false,
-    agendamentos: false,
-    configuração: false,
-    estoque: false
-  });
-
-  const onClickDropdown = ({target}, hasDropwdown) => {
-    if (hasDropwdown) {
-      const keyForChange = [target.innerText.toLocaleLowerCase()];
-      setdropwdownOpen({
-        ...dropwdownOpen,
-        [keyForChange]: !dropwdownOpen[keyForChange]
-      });
-    } else {
-      console.log("redirect");
-    }
-  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {itemsMenu.slice(0, limitDividerMenu).map(({ name, subItemsDropdown }, index) => (
-          <>
-            <ListItemButton key={ index }button>
-              <ListItemText
-                onClick={ (ev) => onClickDropdown(ev, subItemsDropdown.length) }
-                primary={ name }
-              />
-              {subItemsDropdown.length ?
-                dropwdownOpen[name.toLocaleLowerCase()] ? <ExpandLess /> : <ExpandMore />
-                : null}
-            </ListItemButton>
-            {subItemsDropdown.length > 0 &&
-              subItemsDropdown.map((subItem) => (
-                // eslint-disable-next-line react/jsx-key
-                <Collapse
-                  in={ dropwdownOpen[name.toLocaleLowerCase()] }
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <List component="div" disablePadding>
-                    <ListItemButton button sx={ { pl: 4 } }>
-                      <ListItemText primary={ subItem } />
-                    </ListItemButton>
-                  </List>
-                </Collapse>
-              ))}
-          </>
-        ))}
-      </List><Divider />
-      <List>
-        {["Estoque", "Financeiro", "Configuração", "Sair"].map(function (text) {
-          return (
-            <ListItemButton button key={ text }>
-              <ListItemText primary={ text } />
-            </ListItemButton>
-          );
-        })}
-      </List>
-    </div>
-  );
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -171,7 +98,7 @@ function ResponsiveDrawer(props) {
             "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
           } }
         >
-          {drawer}
+          <ItemsNav items={ itemsMenu } />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -181,7 +108,7 @@ function ResponsiveDrawer(props) {
           } }
           open
         >
-          {drawer}
+          <ItemsNav items={ itemsMenu } />
         </Drawer>
       </Box>
       <Box
