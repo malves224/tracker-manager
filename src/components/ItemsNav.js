@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import PropTypes from "prop-types";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -9,6 +8,18 @@ import { useNavigate } from "react-router-dom";
 
 const IndexDivider = 3;
 
+const getIcon = (nameItem) => { // implementar restante dos icones
+  switch (nameItem) {
+  case "Pagina Inicial":
+    return <Icon />;
+  case "Clientes":
+    return <Icon />;
+  default:
+    break;
+  }
+};
+
+
 export default function ItemsNav({items}) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
@@ -17,19 +28,18 @@ export default function ItemsNav({items}) {
     configuração: false,
     estoque: false
   });
-
-  const limitDividerMenu = 4;
+  const navigate = useNavigate();
 
   const onClickDropdown = (item) => {
-    const { subItemsDropdown: subItems, name } = item;
+    const { subItemsDropdown: subItems, name, route } = item;
     if (subItems.length) {
-      const keyForChange = [name.toLocaleLowerCase()];
+      const keyForChange = name.toLocaleLowerCase();
       setdropwdownOpen({
         ...dropwdownOpen,
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
     } else {
-      // função para mdar rota podera ser usado o use navigation
+      navigate(route);
     }
   };
 
@@ -38,34 +48,37 @@ export default function ItemsNav({items}) {
       <Toolbar />
       <Divider />
       <List>
-        {items.map((item, index) => {
-          const {name, subItemsDropdown} = item;
+        {items !== undefined &&
+        items.map((item, index) => {
+          const {name: nameItemPrimary, subItemsDropdown} = item;
           return (
             <>
               <ListItemButton 
                 key={ index }
                 onClick={ () => onClickDropdown(item) }
-                button=""
               >
                 <ListItemText
-                  primary={ name }
+                  primary={ nameItemPrimary }
                 />
                 {subItemsDropdown.length ?
-                  dropwdownOpen[name.toLocaleLowerCase()] 
+                  dropwdownOpen[nameItemPrimary.toLocaleLowerCase()] 
                     ? <ExpandLess /> : <ExpandMore />
                   : null}
               </ListItemButton>
               {subItemsDropdown.length > 0 &&
-              subItemsDropdown.map((subItem) => (
-                // eslint-disable-next-line react/jsx-key
+              subItemsDropdown.map(({name: nameItemSecondary, route}) => (
                 <Collapse
-                  in={ dropwdownOpen[name.toLocaleLowerCase()] }
+                  key={ route }
+                  onClick={ () => navigate(route) }
+                  in={ dropwdownOpen[nameItemPrimary.toLocaleLowerCase()] }
                   timeout="auto"
                   unmountOnExit
                 >
                   <List component="div" disablePadding>
-                    <ListItemButton sx={ { pl: 4 } }>
-                      <ListItemText primary={ subItem } />
+                    <ListItemButton 
+                      sx={ { pl: 4 } }
+                    >
+                      <ListItemText primary={ nameItemSecondary } />
                     </ListItemButton>
                   </List>
                 </Collapse>
@@ -80,6 +93,10 @@ export default function ItemsNav({items}) {
 }
 
 ItemsNav.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    subItemsDropdown: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)),
+    route: PropTypes.string,
+  })).isRequired,
   map: PropTypes.func,
 };

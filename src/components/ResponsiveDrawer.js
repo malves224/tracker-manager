@@ -7,44 +7,23 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
+import { getItemsNav } from "../mockRequests/mockAPI";
 
 const drawerWidth = 240;
-
-const itemsMenu = [
-  {
-    name: "Pagina inicial",
-    subItemsDropdown: [],
-    src: "/",
-  },
-  {
-    name: "Clientes",
-    subItemsDropdown: ["Novo cliente", "Clientes"],
-  },
-  {
-    name: "Veiculos",
-    subItemsDropdown: ["Novo veiculo", "Veiculos"],
-  },
-  {
-    name: "Agendamentos",
-    subItemsDropdown: ["Novo Agendamento", "Agendamentos"],
-  },
-  {
-    name: "Administração",
-    subItemsDropdown: ["Usuarios", "Financeiro"],
-  },
-  {
-    name: "Estoque",
-    subItemsDropdown: [],
-  },
-  {
-    name: "Sair",
-    subItemsDropdown: [],
-  }
-];
 
 function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [itemsMenu, setItemsMenu] = React.useState([]);
+
+  const resquesItems = async (setState) => {
+    const response = await getItemsNav();
+    setState(response);
+  };
+
+  React.useEffect(() => {
+    resquesItems(setItemsMenu);
+  },[]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

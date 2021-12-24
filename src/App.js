@@ -10,7 +10,7 @@ import { Login,
   UsersControl,
   Financeiro,
   Estoque} from "./pages";
-import { NavDrawer } from "./components";
+import  { ResponsiveDrawer }  from "./components";
 
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
   return (
     <>
       {location.pathname != "/login"&&
-        <NavDrawer />}
+        <ResponsiveDrawer />}
       <Routes>
         <Route path="/login" element={ <Login /> } />
         <Route path="/home" element={ <Home /> } />

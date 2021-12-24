@@ -1,5 +1,5 @@
-import NavDrawer from "./NavDrawer";
+import ResponsiveDrawer from "./ResponsiveDrawer";
 
 export { 
-  NavDrawer,
+  ResponsiveDrawer,
 };
