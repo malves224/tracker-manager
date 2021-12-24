@@ -15,14 +15,14 @@ const itemsMenu = [
     name: "Veiculos",
     subItemsDropdown: [
       {name:"Novo veiculo", route: "/newVehicle"},
-      {name: "Veiculos", route : "listClients"} 
+      {name: "Listar Veiculos", route : "listClients"} 
     ],
   },
   {
     name: "Agendamentos",
     subItemsDropdown: [
       {name: "Novo Agendamento", route: "/agendamento"}, 
-      {name: "Agendamentos", route: "/ListAgendamentos"}
+      {name: "Listar Agendamentos", route: "/ListAgendamentos"}
     ],
   },
   {

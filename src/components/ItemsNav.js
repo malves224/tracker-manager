@@ -2,19 +2,56 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import HomeIcon from "@mui/icons-material/Home";
+import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
+import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const IndexDivider = 3;
 
-const getIcon = (nameItem) => { // implementar restante dos icones
+const getIcon = (nameItem) => { 
+  const cssProprietary = {mr: "10px", "font-size": "25px"};
   switch (nameItem) {
-  case "Pagina Inicial":
-    return <Icon />;
+  case "Pagina inicial":
+    return <HomeIcon color="primary" sx={ cssProprietary } />;
   case "Clientes":
-    return <Icon />;
-  default:
+    return <PermContactCalendarIcon color="primary" sx={ cssProprietary } />;
+  case "Novo cliente":
+    return <AddCircleIcon color="primary" sx={ cssProprietary } />;
+  case "Listar Veiculos":
+    return <ViewListIcon color="primary" sx={ cssProprietary } />;
+  case "Novo veiculo":
+    return <AddCircleIcon color="primary" sx={ cssProprietary } />;
+  case "Veiculos":
+    return <DirectionsCarFilledIcon color="primary" sx={ cssProprietary } />;
+  case "Agendamentos":
+    return <DateRangeIcon color="primary" sx={ cssProprietary } />;
+  case "Novo Agendamento":
+    return <AddCircleIcon color="primary" sx={ cssProprietary } />;
+  case "Listar Agendamentos":
+    return <ViewAgendaIcon color="primary" sx={ cssProprietary } />;
+  case "Administração":
+    return <AdminPanelSettingsIcon color="primary" sx={ cssProprietary } />;
+  case "Usuarios":
+    return <SupervisorAccountIcon color="primary" sx={ cssProprietary } />;
+  case "Financeiro":
+    return <LocalAtmIcon color="primary" sx={ cssProprietary } />;
+  case "Estoque":
+    return <InventoryIcon color="primary" sx={ cssProprietary } />;
+  case "Sair":
+    return <ExitToAppIcon color="primary" sx={ cssProprietary } />;
+  default:  
     break;
   }
 };
@@ -57,6 +94,7 @@ export default function ItemsNav({items}) {
                 key={ index }
                 onClick={ () => onClickDropdown(item) }
               >
+                {getIcon(nameItemPrimary)}
                 <ListItemText
                   primary={ nameItemPrimary }
                 />
@@ -78,6 +116,7 @@ export default function ItemsNav({items}) {
                     <ListItemButton 
                       sx={ { pl: 4 } }
                     >
+                      {getIcon(nameItemSecondary)}
                       <ListItemText primary={ nameItemSecondary } />
                     </ListItemButton>
                   </List>
