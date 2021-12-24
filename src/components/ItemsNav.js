@@ -5,7 +5,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const IndexDivider = 3;
 
@@ -29,7 +29,7 @@ export default function ItemsNav({items}) {
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
     } else {
-      // função para mdar rota 
+      // função para mdar rota podera ser usado o use navigation
     }
   };
 

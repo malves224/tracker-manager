@@ -3,12 +3,10 @@ import ItemsNav from "./ItemsNav";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 
 const drawerWidth = 240;
 
@@ -31,8 +29,8 @@ const itemsMenu = [
     subItemsDropdown: ["Novo Agendamento", "Agendamentos"],
   },
   {
-    name: "Configuração",
-    subItemsDropdown: ["Usuarios", "Financeiro", "Estoque"],
+    name: "Administração",
+    subItemsDropdown: ["Usuarios", "Financeiro"],
   },
   {
     name: "Estoque",
@@ -56,7 +54,6 @@ function ResponsiveDrawer(props) {
 
   return (
     <Box sx={ { display: "flex" } }>
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={ {
@@ -74,9 +71,6 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
         </Toolbar>
       </AppBar>
       <Box
@@ -111,21 +105,11 @@ function ResponsiveDrawer(props) {
           <ItemsNav items={ itemsMenu } />
         </Drawer>
       </Box>
-      <Box
-        component="main"
-        sx={ { flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } } }
-      >
-        <Toolbar />
-      </Box>
     </Box>
   );
 }
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window: PropTypes.func,
 };
 
