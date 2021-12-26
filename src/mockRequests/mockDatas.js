@@ -22,7 +22,7 @@ const itemsMenu = [
     name: "Agendamentos",
     subItemsDropdown: [
       {name: "Novo Agendamento", route: "/agendamento"}, 
-      {name: "Listar Agendamentos", route: "/ListAgendamentos"}
+      {name: "Listar Agendamentos", route: "/listAgendamentos"}
     ],
   },
   {
@@ -37,15 +37,119 @@ const itemsMenu = [
     subItemsDropdown: [],
     route: "estoque"
   },
+]; 
+
+
+const perfilPermissions = [
   {
-    name: "Sair",
-    subItemsDropdown: [],
-    route: null
+    id: "1",
+    name: "admin",
+    permissions: [
+      {
+        page: "home",
+        hasSubItem: false,
+        reading: true,
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Clientes",
+        hasSubItem: true,
+        subItems: [{
+          page: "newClient",
+          write: true,
+        }, 
+        {
+          page: "listClients",
+          reading: true,
+          write: true,
+          editing: true,
+          delete: true,
+        }
+        ],
+      },
+      {
+        page: "Veiculos",
+        hasSubItem: true,
+        subItems: [
+          {
+            page: "newVehicle",
+            write: true,
+          },
+          {
+            page: "listVehicles",
+            reading: true,
+            write: true,
+            editing: true,
+            delete: true,
+          }
+        ]
+      },
+      {
+        page: "Agendamentos",
+        hasSubItem: true,
+        subItems: [
+          {
+            page: "agendamento",
+            write: true,
+          },
+          {
+            page: "listAgendamentos",
+            reading: true,
+            write: true,
+            editing: true,
+            delete: true,
+          }
+        ]
+      },
+      {
+        page: "Administração",
+        hasSubItem: true,
+        subItems: [
+          {
+            page: "users",
+            reading: true,
+            write: true,
+            editing: true,
+            delete: true,
+          },
+          {
+            page: "financeiro",
+            reading: true,
+            write: true,
+            editing: true,
+            delete: true,
+          }
+        ]
+      },
+      {
+        page: "estoque",
+        hasSubItem: false,
+        reading: true,
+        write: true,
+        editing: true,
+        delete: true,
+      },
+    ]
   }
 ];
 
-const returnItemsMenu = () => {
-  return itemsMenu;
-};
+const users = [
+  {
+    id: "1",
+    login: "malves224@gmail.com",
+    password: "123456789",
+    fullName: "matheus alves",
+    contato: "1195666665",
+    cargo: "administrador",
+    perfil: "admin",
+    idPerfil: "1"
+  }
+];
 
-export default returnItemsMenu;
+export {
+  itemsMenu,
+  perfilPermissions,
+  users
+};

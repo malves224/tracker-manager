@@ -1,7 +1,12 @@
 import React, {useState} from "react";
-import { Button, Container, TextField, Paper } from "@mui/material";
+import { AlertTogle } from "../components";
+import { Container, 
+  TextField, Paper, } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { checkEmail, checkPassword } from "../util/formValidate";
+import { authenticationLogin } from "../mockRequests/mockAPI";
+import LoadingButton from "@mui/lab/LoadingButton";
+
 
 const useStyles = makeStyles({
   containerPage: {
@@ -18,20 +23,24 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Login() {
-  const [acesso, setAcesso] = useState({
-    email: {
-      value: "",
-      isValid: " "
-    },
-    senha: {
-      value: "",
-      isValid: false
-    }
-  });
-  const styles = useStyles();
+const MIN_DIGIT_PASSWORD = 8;
 
-  const MIN_DIGIT_PASSWORD = 8;
+const initialState = () => ({
+  email: {
+    value: "",
+    isValid: " "
+  },
+  senha: {
+    value: "",
+    isValid: false
+  }
+});
+
+export default function Login() {
+  const [acesso, setAcesso] = useState(initialState());
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [isLoading, setLoading ] = useState(false);
+  const styles = useStyles();
 
   const handleChange = ({target}) => {
     const { id: name, value } = target;
@@ -55,20 +64,41 @@ export default function Login() {
       }
     });
   };
+  const {email, senha } = acesso;
+
+  const onClickAuth = async () => {
+    setLoading(true);
+    try {
+      const response = await authenticationLogin(email.value, senha.value);
+      console.log(response);// autenticar o usuario 
+    } catch (error) {
+      setAcesso(initialState());
+      setAlertOpen(true);
+    }
+    setLoading(false);
+  };
 
   const loginIsValid = () => checkEmail(acesso.email.value) && acesso.senha.isValid;
-
   return (
     <Container class={ styles.containerPage }>
-      <Container sx={ {  width: "430px"} }>
+      <AlertTogle
+        alertOptions={ {
+          severity:"error",
+          isOpen: alertOpen,
+          setOpen: setAlertOpen,
+        } }
+      >
+        não foi possível encontrar um usuário com esse e-mail e senha.      
+      </AlertTogle>
+      <Container sx={ {  width: "430px" } }>
         <Paper>
           <Container class={ styles.containerCardLogin }>
             <TextField
               onChange={ handleChange }
               onBlur={ handleBlurEmail }
-              value={ acesso.email.value }
-              error={ !acesso.email.isValid }
-              helperText={ !acesso.email.isValid && "Email Invalido" }
+              value={ email.value }
+              error={ !email.isValid }
+              helperText={ !email.isValid && "Email Invalido" }
               type="text"
               id="email" 
               label="E-mail"
@@ -77,18 +107,21 @@ export default function Login() {
             />
             <TextField
               onChange={ handleChange }
-              value={ acesso.senha.value }
+              value={ senha.value }
               id="senha"
               label="Senha"
               type="password"
               autoComplete="current-password"
               size="small"
-            />     
-            <Button
+            />
+            <LoadingButton
+              loading={ isLoading }
+              loadingPosition="start"
               variant="contained"
-              disabled={ !loginIsValid() }
-            >Acessar
-            </Button>           
+              disabled={ !loginIsValid() || isLoading }
+              onClick={ onClickAuth }
+            >{!isLoading ? "Acessar" : "Aguarde"}
+            </LoadingButton>
           </Container>
         </Paper>
       </Container>
@@ -98,6 +131,5 @@ export default function Login() {
         </Container>
       </Container> 
     </Container>
-
   );
 }
