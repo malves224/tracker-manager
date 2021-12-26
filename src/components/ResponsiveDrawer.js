@@ -71,7 +71,7 @@ function ResponsiveDrawer(props) {
             "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
           } }
         >
-          <ItemsNav items={ itemsMenu } />
+          <ItemsNav handleDrawerToggle={ handleDrawerToggle } items={ itemsMenu } />
         </Drawer>
         <Drawer
           variant="permanent"

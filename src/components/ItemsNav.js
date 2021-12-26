@@ -57,7 +57,7 @@ const getIcon = (nameItem) => {
 };
 
 
-export default function ItemsNav({items}) {
+export default function ItemsNav({items, handleDrawerToggle: togle}) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
     veiculos: false,
@@ -77,7 +77,13 @@ export default function ItemsNav({items}) {
       });
     } else {
       navigate(route);
+      handleDrawerToggle();
     }
+  };
+
+  const onClickDropdownSubItem = (route) => {
+    navigate(route);
+    togle();
   };
 
   return (
@@ -107,7 +113,7 @@ export default function ItemsNav({items}) {
               subItemsDropdown.map(({name: nameItemSecondary, route}) => (
                 <Collapse
                   key={ route }
-                  onClick={ () => navigate(route) }
+                  onClick={ () => onClickDropdownSubItem(route) }
                   in={ dropwdownOpen[nameItemPrimary.toLocaleLowerCase()] }
                   timeout="auto"
                   unmountOnExit
@@ -138,4 +144,5 @@ ItemsNav.propTypes = {
     route: PropTypes.string,
   })).isRequired,
   map: PropTypes.func,
+  handleDrawerToggle: PropTypes.func
 };
