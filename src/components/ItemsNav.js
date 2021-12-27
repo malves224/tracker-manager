@@ -1,5 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import storage from "../util/storage/store";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import HomeIcon from "@mui/icons-material/Home";
@@ -17,6 +19,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../actions";
 
 const IndexDivider = 3;
 
@@ -57,7 +60,7 @@ const getIcon = (nameItem) => {
 };
 
 
-export default function ItemsNav({items, handleDrawerToggle: togle}) {
+function ItemsNav({items, handleDrawerToggle: togle,setUserAction }) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
     veiculos: false,
@@ -75,9 +78,13 @@ export default function ItemsNav({items, handleDrawerToggle: togle}) {
         ...dropwdownOpen,
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
+    } else if(name === "Sair") {
+      storage.remove("token");
+      setUserAction({});
+      navigate("/login");
     } else {
       navigate(route);
-      handleDrawerToggle();
+      togle();
     }
   };
 
@@ -144,5 +151,12 @@ ItemsNav.propTypes = {
     route: PropTypes.string,
   })).isRequired,
   map: PropTypes.func,
-  handleDrawerToggle: PropTypes.func
+  handleDrawerToggle: PropTypes.func,
+  setUserAction: PropTypes.func.isRequired,
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  setUserAction: (payload) => dispatch(setUser(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(ItemsNav);

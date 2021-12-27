@@ -81,7 +81,7 @@ function ResponsiveDrawer(props) {
           } }
           open
         >
-          <ItemsNav items={ itemsMenu } />
+          <ItemsNav handleDrawerToggle={ handleDrawerToggle } items={ itemsMenu } />
         </Drawer>
       </Box>
     </Box>

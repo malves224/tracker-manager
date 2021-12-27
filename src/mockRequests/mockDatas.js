@@ -37,6 +37,11 @@ const itemsMenu = [
     subItemsDropdown: [],
     route: "estoque"
   },
+  {
+    name: "Sair",
+    subItemsDropdown: [],
+    route: null,
+  }
 ]; 
 
 

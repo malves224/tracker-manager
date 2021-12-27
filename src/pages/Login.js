@@ -1,4 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import {  useNavigate } from "react-router-dom";
+import storage from "../util/storage/store";
+import { connect } from "react-redux";
+import { setUser } from "../actions";
+import PropTypes from "prop-types";
 import { AlertTogle } from "../components";
 import { Container, 
   TextField, Paper, } from "@mui/material";
@@ -36,11 +41,16 @@ const initialState = () => ({
   }
 });
 
-export default function Login() {
+function Login({setUserAction}) {
   const [acesso, setAcesso] = useState(initialState());
   const [alertOpen, setAlertOpen] = useState(false);
   const [isLoading, setLoading ] = useState(false);
+  const navigate = useNavigate();
   const styles = useStyles();
+  
+  useEffect(() => {
+    storage.get("token") !== null && navigate("/");
+  });
 
   const handleChange = ({target}) => {
     const { id: name, value } = target;
@@ -70,7 +80,8 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await authenticationLogin(email.value, senha.value);
-      console.log(response);// autenticar o usuario 
+      setUserAction(response);
+      storage.set("token", response.token);
     } catch (error) {
       setAcesso(initialState());
       setAlertOpen(true);
@@ -88,7 +99,7 @@ export default function Login() {
           setOpen: setAlertOpen,
         } }
       >
-        não foi possível encontrar um usuário com esse e-mail e senha.      
+        Não foi possível encontrar um usuário com esse e-mail e senha.      
       </AlertTogle>
       <Container sx={ {  width: "430px" } }>
         <Paper>
@@ -116,7 +127,6 @@ export default function Login() {
             />
             <LoadingButton
               loading={ isLoading }
-              loadingPosition="start"
               variant="contained"
               disabled={ !loginIsValid() || isLoading }
               onClick={ onClickAuth }
@@ -129,7 +139,17 @@ export default function Login() {
         <Container>
           <h1>Area de login</h1>
         </Container>
-      </Container> 
+      </Container>
     </Container>
   );
 }
+
+Login.propTypes = {
+  setUserAction: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  setUserAction: (payload) => dispatch(setUser(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -26,6 +26,7 @@ const authenticationLogin = (login, password) => {
         resolve({
           ...userToOut,
           permissions: {...permissions[0]},// possivel inner join no db
+          token: "",// simulando token
         });
       } else {
         reject({error: "Usuario e senha invalido"});
