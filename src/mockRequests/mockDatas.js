@@ -2,7 +2,7 @@ const itemsMenu = [
   {
     name: "Pagina inicial",
     subItemsDropdown: [],
-    route: "/home",
+    route: "/",
   },
   {
     name: "Clientes",
@@ -15,7 +15,7 @@ const itemsMenu = [
     name: "Veiculos",
     subItemsDropdown: [
       {name:"Novo veiculo", route: "/newVehicle"},
-      {name: "Listar Veiculos", route : "listClients"} 
+      {name: "Listar Veiculos", route : "/listVehicles"} 
     ],
   },
   {
@@ -35,7 +35,7 @@ const itemsMenu = [
   {
     name: "Estoque",
     subItemsDropdown: [],
-    route: "estoque"
+    route: "/estoque"
   },
   {
     name: "Sair",
