@@ -1,6 +1,7 @@
 
 
 const ADD_USER = "ADD_USER";
+const LOGOFF_USER = "LOGOFF_USER";
 
 
 const setUser = (payload) => ({
@@ -8,7 +9,13 @@ const setUser = (payload) => ({
   payload
 });
 
+const logOffUser = () => ({
+  type: LOGOFF_USER,
+});
+
 export {
   ADD_USER,
-  setUser
+  setUser,
+  LOGOFF_USER,
+  logOffUser
 };
