@@ -16,13 +16,13 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [itemsMenu, setItemsMenu] = React.useState([]);
 
-  const resquesItems = async (setState) => {
+  const resquesItemsNav = async (setState) => {
     const response = await getItemsNav();
     setState(response);
   };
 
   React.useEffect(() => {
-    resquesItems(setItemsMenu);
+    resquesItemsNav(setItemsMenu);
   },[]);
 
   const handleDrawerToggle = () => {

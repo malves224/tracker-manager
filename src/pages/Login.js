@@ -79,11 +79,17 @@ function Login({setUserAction}) {
   const onClickAuth = async () => {
     setLoading(true);
     try {
-      const response = await authenticationLogin(email.value, senha.value);
+      const response = await authenticationLogin(email.value, senha.value);// ** BACK-END função que irá autenticar o usuario
       setUserAction(response);
       storage.set("token", response.token);
     } catch (error) {
-      setAcesso(initialState());
+      setAcesso({
+        ...acesso,
+        senha: {
+          value: "",
+          isValid: false
+        }
+      });
       setAlertOpen(true);
     }
     setLoading(false);

@@ -7,13 +7,13 @@ import { ExpandLess, ExpandMore,
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { setUser } from "../actions";
+import { logOffUser } from "../actions";
 import { icons } from "../util/dataIcons";
 
 const IndexDivider = 3;
 
 
-function ItemsNav({items, handleDrawerToggle: togle,setUserAction }) {
+function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
     veiculos: false,
@@ -33,9 +33,8 @@ function ItemsNav({items, handleDrawerToggle: togle,setUserAction }) {
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
     } else if(name === "Sair") {
-      storage.remove("token");
-      setUserAction({});
-      navigate("/login");
+      storage.remove("token");// BACK-END Função que irá deslogar o usuario
+      logOff();
     } else {
       navigate(route);
       togle();
@@ -108,11 +107,11 @@ ItemsNav.propTypes = {
   })).isRequired,
   map: PropTypes.func,
   handleDrawerToggle: PropTypes.func,
-  setUserAction: PropTypes.func.isRequired,
+  logOff: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setUserAction: (payload) => dispatch(setUser(payload)),
+  logOff: (payload) => dispatch(logOffUser(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(ItemsNav);

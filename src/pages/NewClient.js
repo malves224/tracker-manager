@@ -1,4 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from "react";
+import { connect } from "react-redux";
 
 function NewClient() {
   return (
@@ -8,4 +10,8 @@ function NewClient() {
   );
 }
 
-export default NewClient;
+const mapStateToProps = (state) => ({
+  getUser: state.user,
+});
+
+export default connect(mapStateToProps)(NewClient);

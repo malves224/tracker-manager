@@ -1,13 +1,14 @@
 const itemsMenu = [
   {
-    name: "Pagina inicial",
+    title: "Pagina inicial",
     subItemsDropdown: [],
     route: "/",
+    namePage: "Home"
   },
   {
     name: "Clientes",
     subItemsDropdown: [
-      {name: "Novo cliente", route: "/newClient"}, 
+      {name: "Novo cliente", route: "/newClient", }, 
       {name: "Clientes", route: "/listClients"}
     ],
   },
@@ -51,9 +52,8 @@ const perfilPermissions = [
     name: "admin",
     permissions: [
       {
-        page: "home",
+        page: "Pagina inicial",
         hasSubItem: false,
-        reading: true,
         write: true,
         editing: true,
         delete: true,
@@ -67,7 +67,6 @@ const perfilPermissions = [
         }, 
         {
           page: "listClients",
-          reading: true,
           write: true,
           editing: true,
           delete: true,
@@ -101,7 +100,6 @@ const perfilPermissions = [
           },
           {
             page: "listAgendamentos",
-            reading: true,
             write: true,
             editing: true,
             delete: true,
@@ -114,14 +112,12 @@ const perfilPermissions = [
         subItems: [
           {
             page: "users",
-            reading: true,
             write: true,
             editing: true,
             delete: true,
           },
           {
             page: "financeiro",
-            reading: true,
             write: true,
             editing: true,
             delete: true,
@@ -129,9 +125,8 @@ const perfilPermissions = [
         ]
       },
       {
-        page: "estoque",
+        page: "Estoque",
         hasSubItem: false,
-        reading: true,
         write: true,
         editing: true,
         delete: true,
