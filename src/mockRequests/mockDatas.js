@@ -1,42 +1,41 @@
 const itemsMenu = [
   {
-    title: "Pagina inicial",
+    name: "Pagina inicial",
     subItemsDropdown: [],
-    route: "/",
-    namePage: "Home"
+    route: "Home",
   },
   {
     name: "Clientes",
     subItemsDropdown: [
-      {name: "Novo cliente", route: "/newClient", }, 
-      {name: "Clientes", route: "/listClients"}
+      {name: "Novo cliente", route: "NewClient", }, 
+      {name: "Clientes", route: "ListClients"}
     ],
   },
   {
     name: "Veiculos",
     subItemsDropdown: [
-      {name:"Novo veiculo", route: "/newVehicle"},
-      {name: "Listar Veiculos", route : "/listVehicles"} 
+      {name:"Novo veiculo", route: "NewVehicle"},
+      {name: "Listar Veiculos", route : "ListVehicles"} 
     ],
   },
   {
     name: "Agendamentos",
     subItemsDropdown: [
-      {name: "Novo Agendamento", route: "/agendamento"}, 
-      {name: "Listar Agendamentos", route: "/listAgendamentos"}
+      {name: "Novo Agendamento", route: "NewAgendamento"}, 
+      {name: "Listar Agendamentos", route: "ListAgendamentos"}
     ],
   },
   {
     name: "Administração",
     subItemsDropdown: [
-      {name: "Usuarios", route: "/users"},
-      {name: "Financeiro", route: "/financeiro"}
+      {name: "Usuarios", route: "UsersControl"},
+      {name: "Financeiro", route: "Financeiro"}
     ],
   },
   {
     name: "Estoque",
     subItemsDropdown: [],
-    route: "/estoque"
+    route: "Estoque"
   },
   {
     name: "Sair",
@@ -52,85 +51,63 @@ const perfilPermissions = [
     name: "admin",
     permissions: [
       {
-        page: "Pagina inicial",
-        hasSubItem: false,
+        page: "Home",
         write: true,
         editing: true,
         delete: true,
       },
       {
-        page: "Clientes",
-        hasSubItem: true,
-        subItems: [{
-          page: "newClient",
-          write: true,
-        }, 
-        {
-          page: "listClients",
-          write: true,
-          editing: true,
-          delete: true,
-        }
-        ],
-      },
+        page: "NewClient",
+        write: true,
+      }, 
       {
-        page: "Veiculos",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "newVehicle",
-            write: true,
-          },
-          {
-            page: "listVehicles",
-            reading: true,
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
-      },
+        page: "ListClients",
+        write: true,
+        editing: true,
+        delete: true,
+      }
+      ,
       {
-        page: "Agendamentos",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "agendamento",
-            write: true,
-          },
-          {
-            page: "listAgendamentos",
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
-      },
-      {
-        page: "Administração",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "users",
-            write: true,
-            editing: true,
-            delete: true,
-          },
-          {
-            page: "financeiro",
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
-      },
-      {
-        page: "Estoque",
-        hasSubItem: false,
+        page: "ListVehicles",
         write: true,
         editing: true,
         delete: true,
       },
+      {
+        page: "NewVehicle",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "NewAgendamento",
+        write: true,
+      },
+      {
+        page: "ListAgendamentos",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "UsersControl",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Financeiro",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      //      {
+      //        page: "Estoque",
+      //        hasSubItem: false,
+      //        write: true,
+      //        editing: true,
+      //        delete: true,
+      //      },
     ]
   }
 ];

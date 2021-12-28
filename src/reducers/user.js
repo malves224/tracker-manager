@@ -2,6 +2,18 @@ import { ADD_USER, LOGOFF_USER } from "../actions";
 
 const initialState = {
   email: "",
+  id: "",
+  login: "",
+  fullName: "",
+  contato: "",
+  cargo: "",
+  perfil: "",
+  idPerfil: "",
+  perfilData: {
+    id: "",
+    name: "",
+    permissions: []
+  }
 };
 
 const user = (state = initialState, { type, payload }) => {

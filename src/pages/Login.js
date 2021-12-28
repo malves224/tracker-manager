@@ -49,7 +49,7 @@ function Login({setUserAction}) {
   const styles = useStyles();
   
   useEffect(() => {
-    storage.get("token") !== null && navigate("/");
+    storage.get("token") !== null && navigate("/Home");
   });
 
   const handleChange = ({target}) => {
@@ -82,6 +82,7 @@ function Login({setUserAction}) {
       const response = await authenticationLogin(email.value, senha.value);// ** BACK-END função que irá autenticar o usuario
       setUserAction(response);
       storage.set("token", response.token);
+      storage.set("dataUser", response);// insere os dados do usuario no state global em storage(BACK-END CORRIGIR)
     } catch (error) {
       setAcesso({
         ...acesso,

@@ -20,38 +20,39 @@ function App() {
   const location = useLocation();
   return (
     <>
-      {location.pathname !== "/login"&&
+      {location.pathname !== "/"&&
         <ResponsiveDrawer />}
       <Routes>
-        <Route path="/login" element={ <Login /> } />
-        <Route path="/" element={ <RequireAuth><Home /></RequireAuth> } />
-        <Route path="/newClient" element={ <RequireAuth><NewClient /></RequireAuth> } />
+        <Route path="/" element={ <Login /> } />
+        <Route path="/Home" element={ <RequireAuth><Home /></RequireAuth> } />
+        <Route path="/NewClient" element={ <RequireAuth><NewClient /></RequireAuth> } />
         <Route
-          path="/listClients"
+          path="/ListClients"
           element={ <RequireAuth><ListClients /></RequireAuth> } 
         />
-        <Route path="/newVehicle" element={ <RequireAuth><NewVehicle /></RequireAuth> } />
+        <Route path="/NewVehicle" element={ <RequireAuth><NewVehicle /></RequireAuth> } />
         <Route
           path="/listVehicles"
           element={ <RequireAuth><ListVehicles /></RequireAuth> }
         />
         <Route
-          path="/agendamento"
+          path="/NewAgendamento"
           element={ <RequireAuth><NewAgendamento /></RequireAuth> } 
         />
         <Route
-          path="/listAgendamentos"
+          path="/ListAgendamentos"
           element={ <RequireAuth><ListAgendamentos /></RequireAuth> }
         />
-        <Route path="/users" element={ <RequireAuth><UsersControl /></RequireAuth> } />
-        <Route path="/financeiro" element={ <RequireAuth><Financeiro /></RequireAuth> } />
-        <Route path="/estoque" element={ <RequireAuth><Estoque /></RequireAuth> } />
+        <Route
+          path="/UsersControl"
+          element={ <RequireAuth><UsersControl /></RequireAuth> }
+        />
+        <Route path="/Financeiro" element={ <RequireAuth><Financeiro /></RequireAuth> } />
+        <Route path="/Estoque" element={ <RequireAuth><Estoque /></RequireAuth> } />
         <Route
           path="*"
           element={ 
-            <RequireAuth>
-              <h1 id="notfound">Not found</h1> 
-            </RequireAuth>
+            <h1 id="notfound">Not found</h1> 
           }
         />
       </Routes>
