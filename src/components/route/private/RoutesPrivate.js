@@ -21,7 +21,7 @@ function RequireAuth({children, getPermissions, setUserAction}) {
   getPermissions.length === 0
     && updateUser();// garante que nao perca o estado global ao atualizar a page  
   
-  const hasPermisionAcesso = getPermissions
+  const hasPermisionAcesso = getPermissions// ideal seria verificar permisão de acesso direto do banco
     .some((perm) => perm.page === children.type.name);
 
   if(hasPermisionAcesso){

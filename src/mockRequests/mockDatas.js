@@ -36,14 +36,8 @@ const itemsMenu = [
     name: "Estoque",
     subItemsDropdown: [],
     route: "Estoque"
-  },
-  {
-    name: "Sair",
-    subItemsDropdown: [],
-    route: null,
   }
-]; 
-
+];
 
 const perfilPermissions = [
   {
@@ -101,13 +95,13 @@ const perfilPermissions = [
         editing: true,
         delete: true,
       },
-      //      {
-      //        page: "Estoque",
-      //        hasSubItem: false,
-      //        write: true,
-      //        editing: true,
-      //        delete: true,
-      //      },
+      {
+        page: "Estoque",
+        hasSubItem: false,
+        write: true,
+        editing: true,
+        delete: true,
+      },
     ]
   }
 ];
@@ -125,8 +119,62 @@ const users = [
   }
 ];
 
+const mockPermisions = [
+  {
+    "page": "Home",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewClient",
+    "write": true
+  },
+  {
+    "page": "ListClients",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "ListVehicles",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewVehicle",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewAgendamento",
+    "write": true
+  },
+  {
+    "page": "ListAgendamentos",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "UsersControl",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "Financeiro",
+    "write": true,
+    "editing": true,
+    "delete": true
+  }
+];
+
 export {
   itemsMenu,
   perfilPermissions,
-  users
+  users,
+  mockPermisions
 };

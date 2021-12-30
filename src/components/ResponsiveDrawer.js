@@ -1,5 +1,6 @@
 import * as React from "react";
 import ItemsNav from "./ItemsNav";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,22 +9,32 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { getItemsNav } from "../mockRequests/mockAPI";
+import { getItemsNavAllowed } from "../util/filter";
 
 const drawerWidth = 240;
 
+const INITIAL_ITEMS_MENU = [
+  {
+    name: "Sair",
+    subItemsDropdown: [],
+    route: null,
+  }
+];
+
 function ResponsiveDrawer(props) {
-  const { window } = props;
+  const { window, getPermissions } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [itemsMenu, setItemsMenu] = React.useState([]);
 
-  const resquesItemsNav = async (setState) => {
-    const response = await getItemsNav();
-    setState(response);
+  const resquesItemsNavAllowed = async (setState) => {
+    const response = await getItemsNav(getPermissions);
+    const itemsAllowed = getItemsNavAllowed(getPermissions, response);
+    setState([...itemsAllowed, ...INITIAL_ITEMS_MENU]);
   };
 
   React.useEffect(() => {
-    resquesItemsNav(setItemsMenu);
-  },[]);
+    resquesItemsNavAllowed(setItemsMenu);
+  },[getPermissions]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -88,8 +99,13 @@ function ResponsiveDrawer(props) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  getPermissions: state.user.perfilData.permissions,
+});
+
 ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
+  getPermissions: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default ResponsiveDrawer;
+export default  connect(mapStateToProps)(ResponsiveDrawer);
