@@ -14,13 +14,16 @@ import { Login,
   Estoque,
   ListVehicles} from "./pages";
 import  { ResponsiveDrawer }  from "./components";
-
+import storage from "./util/storage/store";
 
 function App() {
+
+  const userHasToken = storage.get("token") !== null;
+
   const location = useLocation();
   return (
     <>
-      {location.pathname !== "/"&&
+      {userHasToken&&
         <ResponsiveDrawer />}
       <Routes>
         <Route path="/" element={ <Login /> } />

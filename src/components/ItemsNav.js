@@ -34,6 +34,7 @@ function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
       });
     } else if(name === "Sair") {
       storage.remove("token");// BACK-END Função que irá deslogar o usuario
+      storage.remove("dataUser");// BACK-END Função que irá deslogar o usuario
       logOff();
       navigate("/");
     } else {

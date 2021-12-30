@@ -12,9 +12,9 @@ function RequireAuth({children, getPermissions, setUserAction}) {
     setUserAction(storage.get("dataUser"));
   };
 
-  const userHasToken = storage.get("token") === null;
+  const userHasToken = storage.get("token") !== null;
 
-  if(userHasToken) {
+  if(!userHasToken) {
     return <Navigate to="/" />;
   }
   
@@ -26,8 +26,9 @@ function RequireAuth({children, getPermissions, setUserAction}) {
 
   if(hasPermisionAcesso){
     return children;
+  } else {
+    return <NoAcess />;
   }
-  return <NoAcess />;
 }
 
 const mapStateToProps = (state) => ({
