@@ -115,7 +115,10 @@ const users = [
     contato: "1195666665",
     cargo: "administrador",
     perfil: "admin",
-    idPerfil: "1"
+    idPerfil: "1",
+    config : {
+      mode: "dark"
+    }
   }
 ];
 

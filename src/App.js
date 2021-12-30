@@ -1,7 +1,9 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import RequireAuth from "./components/route/private/RoutesPrivate";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { connect } from "react-redux";
 import { Login, 
   Home, 
   ListClients, 
@@ -13,16 +15,31 @@ import { Login,
   Financeiro,
   Estoque,
   ListVehicles} from "./pages";
+import "./App.css";
 import  { ResponsiveDrawer }  from "./components";
-import storage from "./util/storage/store";
 
-function App() {
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
-  const userHasToken = storage.get("token") !== null;
+const lightTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
-  const location = useLocation();
+function App({user}) {
+  const {token, config} = user;
+  const [userHasToken, setUserToken ] = React.useState(null);
+
+  React.useEffect(() => {
+    setUserToken(token !== null);
+  }, [token]);
+
   return (
-    <>
+    <ThemeProvider theme={ config.mode === "dark" ? darkTheme : lightTheme }>
       {userHasToken&&
         <ResponsiveDrawer />}
       <Routes>
@@ -59,9 +76,13 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </ThemeProvider>
 
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default  connect(mapStateToProps)(App);

@@ -6,27 +6,10 @@ import { setUser } from "../actions";
 import PropTypes from "prop-types";
 import { AlertTogle } from "../components";
 import { Container, 
-  TextField, Paper, } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+  TextField, Paper, Card, } from "@mui/material";
 import { checkEmail, checkPassword } from "../util/formValidate";
 import { authenticationLogin } from "../mockRequests/mockAPI";
 import LoadingButton from "@mui/lab/LoadingButton";
-
-
-const useStyles = makeStyles({
-  containerPage: {
-    display: "flex",
-    alignItems: "center",
-    height: "calc(100vh)",
-  },
-  containerCardLogin: {
-    display: "flex",
-    justifyContent: "space-around",
-    height:"280px",
-    "flexFlow": "column",
-    padding: "15px 60px",
-  },
-});
 
 const MIN_DIGIT_PASSWORD = 8;
 
@@ -46,7 +29,6 @@ function Login({setUserAction}) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [isLoading, setLoading ] = useState(false);
   const navigate = useNavigate();
-  const styles = useStyles();
   
   useEffect(() => {
     storage.get("token") !== null && navigate("/Home");
@@ -74,6 +56,7 @@ function Login({setUserAction}) {
       }
     });
   };
+
   const {email, senha } = acesso;
 
   const onClickAuth = async () => {
@@ -98,7 +81,13 @@ function Login({setUserAction}) {
 
   const loginIsValid = () => checkEmail(acesso.email.value) && acesso.senha.isValid;
   return (
-    <Container class={ styles.containerPage }>
+    <Paper
+      sx={ {
+        display: "flex",
+        alignItems: "center",
+        height: "calc(100vh)",
+      } }
+    >
       <AlertTogle
         alertOptions={ {
           severity:"error",
@@ -109,8 +98,16 @@ function Login({setUserAction}) {
         Não foi possível encontrar um usuário com esse e-mail e senha.      
       </AlertTogle>
       <Container sx={ {  width: "430px" } }>
-        <Paper>
-          <Container class={ styles.containerCardLogin }>
+        <Card variant="outlined">
+          <Container
+            sx={ {
+              display: "flex",
+              justifyContent: "space-around",
+              height:"280px",
+              "flexFlow": "column",
+              padding: "15px 60px",
+            } }
+          >
             <TextField
               onChange={ handleChange }
               onBlur={ handleBlurEmail }
@@ -140,14 +137,9 @@ function Login({setUserAction}) {
             >{!isLoading ? "Acessar" : "Aguarde"}
             </LoadingButton>
           </Container>
-        </Paper>
+        </Card>
       </Container>
-      <Container>
-        <Container>
-          <h1>Area de login</h1>
-        </Container>
-      </Container>
-    </Container>
+    </Paper>
   );
 }
 

@@ -18,7 +18,6 @@ const AlertTogle = ({alertOptions, children}) => {
         action={
           <IconButton
             aria-label="close"
-            color="inherit"
             size="small"
             onClick={ () => {
               setOpen(false);

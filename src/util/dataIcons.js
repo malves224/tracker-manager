@@ -15,18 +15,18 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 
 
 const icons = {
-  "Pagina inicial":(sx) => <HomeIcon color="primary" sx={ sx } />,
-  "Clientes": (sx) => <PermContactCalendarIcon color="primary" sx={ sx } />,
-  "Novo": (sx) => <AddCircleIcon color="primary" sx={ sx } />,
-  "Listar Veiculos": (sx) => <ViewListIcon color="primary" sx={ sx } />,
-  "Veiculos": (sx) => <DirectionsCarFilledIcon color="primary" sx={ sx } />,
-  "Agendamentos": (sx) => <DateRangeIcon color="primary" sx={ sx } />,
-  "Listar Agendamentos": (sx) => <ViewAgendaIcon color="primary" sx={ sx } />,
-  "Administração": (sx) => <AdminPanelSettingsIcon color="primary" sx={ sx } />,
-  "Usuarios": (sx) => <SupervisorAccountIcon color="primary" sx={ sx } />,
-  "Financeiro": (sx) => <LocalAtmIcon color="primary" sx={ sx } />,
-  "Estoque": (sx) => <InventoryIcon color="primary" sx={ sx } />,
-  "Sair": (sx) => <ExitToAppIcon color="primary" sx={ sx } />,
+  "Pagina inicial":(sx) => <HomeIcon sx={ sx } />,
+  "Clientes": (sx) => <PermContactCalendarIcon sx={ sx } />,
+  "Novo": (sx) => <AddCircleIcon sx={ sx } />,
+  "Listar Veiculos": (sx) => <ViewListIcon sx={ sx } />,
+  "Veiculos": (sx) => <DirectionsCarFilledIcon sx={ sx } />,
+  "Agendamentos": (sx) => <DateRangeIcon sx={ sx } />,
+  "Listar Agendamentos": (sx) => <ViewAgendaIcon sx={ sx } />,
+  "Administração": (sx) => <AdminPanelSettingsIcon sx={ sx } />,
+  "Usuarios": (sx) => <SupervisorAccountIcon sx={ sx } />,
+  "Financeiro": (sx) => <LocalAtmIcon sx={ sx } />,
+  "Estoque": (sx) => <InventoryIcon sx={ sx } />,
+  "Sair": (sx) => <ExitToAppIcon sx={ sx } />,
   getIcon: (key, css) => 
     key.includes("Novo")
       ? icons["Novo"](css)

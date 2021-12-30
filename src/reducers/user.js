@@ -13,6 +13,10 @@ const initialState = {
     id: "",
     name: "",
     permissions: []
+  },
+  token: null,
+  config: {
+    mode: "light"
   }
 };
 
