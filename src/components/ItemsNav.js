@@ -1,19 +1,17 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import storage from "../util/storage/store";
 import { ExpandLess, ExpandMore,
 } from "@mui/icons-material";
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { logOffUser } from "../actions";
 import { icons } from "../util/dataIcons";
 
 const IndexDivider = 3;
 
 
-function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
+function ItemsNav({items, handleDrawerToggle: togle }) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
     veiculos: false,
@@ -59,7 +57,7 @@ function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
           return (
             <>
               <ListItemButton
-                selected={ item.route === location.pathname }
+                selected={ `/${item.route}` === location.pathname }
                 key={ index }
                 onClick={ () => onClickDropdown(item) }
               >
@@ -83,7 +81,7 @@ function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
                 >
                   <List component="div" disablePadding>
                     <ListItemButton
-                      selected={ route === location.pathname }
+                      selected={ `/${route}` === location.pathname }
                       sx={ { pl: 4 } }
                     >
                       {icons.getIcon(nameItemSecondary,{mr: "10px", "font-size": "25px"})}
@@ -93,7 +91,6 @@ function ItemsNav({items, handleDrawerToggle: togle, logOff }) {
                 </Collapse>
               ))}
               {index === IndexDivider && <Divider />}
-              {index === items.length -1 && <Divider />}
             </>);
         })}
       </List>
@@ -109,11 +106,6 @@ ItemsNav.propTypes = {
   })).isRequired,
   map: PropTypes.func,
   handleDrawerToggle: PropTypes.func,
-  logOff: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  logOff: (payload) => dispatch(logOffUser(payload)),
-});
-
-export default connect(null, mapDispatchToProps)(ItemsNav);
+export default ItemsNav;

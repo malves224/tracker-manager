@@ -2,6 +2,7 @@ import { itemsMenu, users, perfilPermissions } from "./mockDatas";
 
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
 // nao é desenvolvido.
+/* istanbul ignore file */
 
 const TIME_RESPONSE = 700;
 
