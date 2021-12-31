@@ -22,5 +22,6 @@ const getItemsNavAllowed = (permissions, itemsNav) => {
 };
 
 export {
+  checkPermision,
   getItemsNavAllowed,
 };

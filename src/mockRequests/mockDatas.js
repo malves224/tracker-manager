@@ -1,3 +1,5 @@
+// não excluir, os dados estão sendo utilizados para testes.
+
 const itemsMenu = [
   {
     name: "Pagina inicial",
@@ -38,6 +40,47 @@ const itemsMenu = [
     route: "Estoque"
   }
 ];
+
+const itemsMenuNoHasNewVehicle = [
+  {
+    name: "Pagina inicial",
+    subItemsDropdown: [],
+    route: "Home",
+  },
+  {
+    name: "Clientes",
+    subItemsDropdown: [
+      {name: "Novo cliente", route: "NewClient", }, 
+      {name: "Clientes", route: "ListClients"}
+    ],
+  },
+  {
+    name: "Veiculos",
+    subItemsDropdown: [
+      {name: "Listar Veiculos", route : "ListVehicles"} 
+    ],
+  },
+  {
+    name: "Agendamentos",
+    subItemsDropdown: [
+      {name: "Novo Agendamento", route: "NewAgendamento"}, 
+      {name: "Listar Agendamentos", route: "ListAgendamentos"}
+    ],
+  },
+  {
+    name: "Administração",
+    subItemsDropdown: [
+      {name: "Usuarios", route: "UsersControl"},
+      {name: "Financeiro", route: "Financeiro"}
+    ],
+  },
+  {
+    name: "Estoque",
+    subItemsDropdown: [],
+    route: "Estoque"
+  }
+];
+
 
 const perfilPermissions = [
   {
@@ -172,6 +215,12 @@ const mockPermisions = [
     "write": true,
     "editing": true,
     "delete": true
+  },
+  {
+    "page": "Estoque",
+    "write": true,
+    "editing": true,
+    "delete": true
   }
 ];
 
@@ -179,5 +228,6 @@ export {
   itemsMenu,
   perfilPermissions,
   users,
-  mockPermisions
+  mockPermisions,
+  itemsMenuNoHasNewVehicle
 };
