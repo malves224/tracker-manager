@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import ItemsNav from "./ItemsNav";
 import { connect } from "react-redux";
@@ -17,7 +16,7 @@ import { useMediaQuery } from "@mui/material";
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
-  const { window, getPermissions, getNameUser } = props;
+  const { window, getPermissions } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [itemsMenu, setItemsMenu] = React.useState([]);
   const isScreenMobile = useMediaQuery("(max-width:600px)");
@@ -107,7 +106,6 @@ const mapStateToProps = (state) => ({
 ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
   getPermissions: PropTypes.arrayOf(PropTypes.object),
-  getNameUser: PropTypes.string,
 };
 
 export default  connect(mapStateToProps)(ResponsiveDrawer);

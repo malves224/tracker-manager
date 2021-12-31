@@ -1,4 +1,4 @@
-import { ADD_USER, LOGOFF_USER } from "../actions";
+import { ADD_USER, LOGOFF_USER, SWITCH_MODE } from "../actions";
 
 const initialState = {
   email: "",
@@ -26,6 +26,13 @@ const user = (state = initialState, { type, payload }) => {
     return { ...state, ...payload };
   case LOGOFF_USER:
     return initialState;
+  case SWITCH_MODE:
+    return {
+      ...state,
+      config: {
+        mode: state.config.mode === "dark" ? "light" : "dark"
+      }
+    };
   default:
     return state;
   }

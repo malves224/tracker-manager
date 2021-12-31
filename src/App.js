@@ -26,7 +26,7 @@ const darkTheme = createTheme({
 
 const lightTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
   },
 });
 

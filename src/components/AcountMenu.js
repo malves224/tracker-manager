@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -12,17 +13,24 @@ import Divider from "@mui/material/Divider";
 import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { logOffUser } from "../actions";
+import { logOffUser, switchMode } from "../actions";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-function AccountMenu({getNameUser, logOff}) {
+
+function AccountMenu({getNameUser, logOff, getTheme, switchTheme}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const setPreferenceMode = () => {
+    switchTheme();// BACK-END É PRECISO MUDAR A PREFERENCIA JUNTO AO DB
   };
 
   const handleClose = () => {
@@ -33,7 +41,7 @@ function AccountMenu({getNameUser, logOff}) {
     storage.remove("token");// BACK-END Função que irá deslogar o usuario
     storage.remove("dataUser");// BACK-END Função que irá deslogar o usuario
     logOff();
-    navigate("/");  
+    navigate("/"); 
   };
   
   return (
@@ -60,7 +68,6 @@ function AccountMenu({getNameUser, logOff}) {
         id="account-menu"
         open={ open }
         onClose={ handleClose }
-        onClick={ handleClose }
         PaperProps={ {
           elevation: 0,
           sx: {
@@ -91,9 +98,11 @@ function AccountMenu({getNameUser, logOff}) {
         anchorOrigin={ { horizontal: "right", vertical: "bottom" } }
       >
         <MenuItem>{getNameUser}</MenuItem>
-        <MenuItem>
-          <Avatar />
-          My account
+        <MenuItem onClick={ setPreferenceMode }>
+          <ListItemIcon>
+            {getTheme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </ListItemIcon>
+          {`${getTheme === "dark" ? "Light" : "Dark"} mode`}
         </MenuItem>
         <Divider />
         <MenuItem>
@@ -115,15 +124,19 @@ function AccountMenu({getNameUser, logOff}) {
 
 const mapStateToProps = (state) => ({
   getNameUser: state.user.fullName,
+  getTheme: state.user.config.mode,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   logOff: (payload) => dispatch(logOffUser(payload)),
+  switchTheme: (payload) => dispatch(switchMode(payload))
 });
 
 AccountMenu.propTypes = {
   getNameUser: PropTypes.string,
-  logOff: PropTypes.func.isRequired,
+  logOff: PropTypes.func,
+  getTheme: PropTypes.string,
+  switchTheme: PropTypes.func,
 };
 
 
