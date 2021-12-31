@@ -10,7 +10,6 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import InventoryIcon from "@mui/icons-material/Inventory";
 
 
@@ -26,7 +25,6 @@ const icons = {
   "Usuarios": (sx) => <SupervisorAccountIcon sx={ sx } />,
   "Financeiro": (sx) => <LocalAtmIcon sx={ sx } />,
   "Estoque": (sx) => <InventoryIcon sx={ sx } />,
-  "Sair": (sx) => <ExitToAppIcon sx={ sx } />,
   getIcon: (key, css) => 
     key.includes("Novo")
       ? icons["Novo"](css)
