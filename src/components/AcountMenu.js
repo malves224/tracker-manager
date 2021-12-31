@@ -1,5 +1,3 @@
-/* eslint-disable no-constant-condition */
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import Box from "@mui/material/Box";
 import storage from "../util/storage/store";
@@ -138,7 +136,5 @@ AccountMenu.propTypes = {
   getTheme: PropTypes.string,
   switchTheme: PropTypes.func,
 };
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountMenu);

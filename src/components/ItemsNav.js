@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import storage from "../util/storage/store";
 import { ExpandLess, ExpandMore,
 } from "@mui/icons-material";
 import { Collapse, 
@@ -30,11 +29,6 @@ function ItemsNav({items, handleDrawerToggle: togle }) {
         ...dropwdownOpen,
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
-    } else if(name === "Sair") {
-      storage.remove("token");// BACK-END Função que irá deslogar o usuario
-      storage.remove("dataUser");// BACK-END Função que irá deslogar o usuario
-      logOff();
-      navigate("/");
     } else {
       navigate(route);
       togle();
