@@ -1,7 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import PropTypes from "prop-types";
 import RequireAuth from "./components/route/private/RoutesPrivate";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { connect } from "react-redux";
 import { Login, 
   Home, 
   ListClients, 
@@ -13,51 +15,98 @@ import { Login,
   Financeiro,
   Estoque,
   ListVehicles} from "./pages";
+import "./App.css";
 import  { ResponsiveDrawer }  from "./components";
 
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
-function App() {
-  const location = useLocation();
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
+
+function App({token, themeMode}) {
+  const [userHasToken, setUserToken ] = React.useState(null);
+
+  React.useEffect(() => {
+    setUserToken(token !== null);
+  }, [token]);
+
   return (
-    <>
-      {location.pathname !== "/login"&&
+    <ThemeProvider theme={ themeMode === "dark" ? darkTheme : lightTheme }>
+      {userHasToken&&
         <ResponsiveDrawer />}
-      <Routes>
-        <Route path="/login" element={ <Login /> } />
-        <Route path="/" element={ <RequireAuth><Home /></RequireAuth> } />
-        <Route path="/newClient" element={ <RequireAuth><NewClient /></RequireAuth> } />
+      <Switch>
         <Route
-          path="/listClients"
-          element={ <RequireAuth><ListClients /></RequireAuth> } 
+          exact
+          path="/"
+          render={ () => <Login /> }
         />
-        <Route path="/newVehicle" element={ <RequireAuth><NewVehicle /></RequireAuth> } />
+        <Route
+          path="/Home"
+          render={ () => <RequireAuth><Home /></RequireAuth>  }
+        />
+        <Route
+          path="/NewClient"
+          render={ () => <RequireAuth><NewClient /></RequireAuth> }
+        />
+        <Route
+          path="/ListClients"
+          render={ () => <RequireAuth><ListClients /></RequireAuth> } 
+        />
+        <Route
+          path="/NewVehicle"
+          render={ () => <RequireAuth><NewVehicle /></RequireAuth> }
+        />
         <Route
           path="/listVehicles"
-          element={ <RequireAuth><ListVehicles /></RequireAuth> }
+          render={ () => <RequireAuth><ListVehicles /></RequireAuth> }
         />
         <Route
-          path="/agendamento"
-          element={ <RequireAuth><NewAgendamento /></RequireAuth> } 
+          path="/NewAgendamento"
+          render={ () => <RequireAuth><NewAgendamento /></RequireAuth> } 
         />
         <Route
-          path="/listAgendamentos"
-          element={ <RequireAuth><ListAgendamentos /></RequireAuth> }
+          path="/ListAgendamentos"
+          render={ () => <RequireAuth><ListAgendamentos /></RequireAuth> }
         />
-        <Route path="/users" element={ <RequireAuth><UsersControl /></RequireAuth> } />
-        <Route path="/financeiro" element={ <RequireAuth><Financeiro /></RequireAuth> } />
-        <Route path="/estoque" element={ <RequireAuth><Estoque /></RequireAuth> } />
+        <Route
+          path="/UsersControl"
+          render={ () => <RequireAuth><UsersControl /></RequireAuth> }
+        />
+        <Route
+          path="/Financeiro"
+          render={ () => <RequireAuth><Financeiro /></RequireAuth> }
+        />
+        <Route path="/Estoque" render={ () => <RequireAuth><Estoque /></RequireAuth> } />
         <Route
           path="*"
-          element={ 
-            <RequireAuth>
-              <h1 id="notfound">Not found</h1> 
-            </RequireAuth>
-          }
+          render={ () =>
+            <h1 id="notfound">Not found</h1> }
         />
-      </Routes>
-    </>
+
+      </Switch>
+    </ThemeProvider>
 
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  token: state.user.token,
+  themeMode: state.user.config.mode,
+});
+
+App.propTypes = {
+  token: PropTypes.oneOfType([
+    PropTypes.any,
+    PropTypes.string,
+  ]),
+  themeMode: PropTypes.string,
+};
+
+export default  connect(mapStateToProps)(App);

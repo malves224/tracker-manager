@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { itemsMenu, users, perfilPermissions } from "./mockDatas";
 
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
 // nao é desenvolvido.
+/* istanbul ignore file */
 
 const TIME_RESPONSE = 700;
 
@@ -25,7 +25,7 @@ const authenticationLogin = (login, password) => {
           .filter((perfil) => userToOut.idPerfil === perfil.id);
         resolve({
           ...userToOut,
-          permissions: {...permissions[0]},// possivel inner join no db
+          perfilData: {...permissions[0]},// possivel inner join no db
           token: "",// simulando token
         });
       } else {

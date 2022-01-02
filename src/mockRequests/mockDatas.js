@@ -1,48 +1,85 @@
+// não excluir, os dados estão sendo utilizados para testes.
+
 const itemsMenu = [
   {
     name: "Pagina inicial",
     subItemsDropdown: [],
-    route: "/home",
+    route: "Home",
   },
   {
     name: "Clientes",
     subItemsDropdown: [
-      {name: "Novo cliente", route: "/newClient"}, 
-      {name: "Clientes", route: "/listClients"}
+      {name: "Novo cliente", route: "NewClient", }, 
+      {name: "Clientes", route: "ListClients"}
     ],
   },
   {
     name: "Veiculos",
     subItemsDropdown: [
-      {name:"Novo veiculo", route: "/newVehicle"},
-      {name: "Listar Veiculos", route : "listClients"} 
+      {name:"Novo veiculo", route: "NewVehicle"},
+      {name: "Listar Veiculos", route : "ListVehicles"} 
     ],
   },
   {
     name: "Agendamentos",
     subItemsDropdown: [
-      {name: "Novo Agendamento", route: "/agendamento"}, 
-      {name: "Listar Agendamentos", route: "/listAgendamentos"}
+      {name: "Novo Agendamento", route: "NewAgendamento"}, 
+      {name: "Listar Agendamentos", route: "ListAgendamentos"}
     ],
   },
   {
     name: "Administração",
     subItemsDropdown: [
-      {name: "Usuarios", route: "/users"},
-      {name: "Financeiro", route: "/financeiro"}
+      {name: "Usuarios", route: "UsersControl"},
+      {name: "Financeiro", route: "Financeiro"}
     ],
   },
   {
     name: "Estoque",
     subItemsDropdown: [],
-    route: "estoque"
+    route: "Estoque"
+  }
+];
+
+const itemsMenuNoHasNewVehicle = [
+  {
+    name: "Pagina inicial",
+    subItemsDropdown: [],
+    route: "Home",
   },
   {
-    name: "Sair",
+    name: "Clientes",
+    subItemsDropdown: [
+      {name: "Novo cliente", route: "NewClient", }, 
+      {name: "Clientes", route: "ListClients"}
+    ],
+  },
+  {
+    name: "Veiculos",
+    subItemsDropdown: [
+      {name: "Listar Veiculos", route : "ListVehicles"} 
+    ],
+  },
+  {
+    name: "Agendamentos",
+    subItemsDropdown: [
+      {name: "Novo Agendamento", route: "NewAgendamento"}, 
+      {name: "Listar Agendamentos", route: "ListAgendamentos"}
+    ],
+  },
+  {
+    name: "Administração",
+    subItemsDropdown: [
+      {name: "Usuarios", route: "UsersControl"},
+      {name: "Financeiro", route: "Financeiro"}
+    ],
+  },
+  {
+    name: "Estoque",
     subItemsDropdown: [],
-    route: null,
+    route: "Estoque"
   }
-]; 
+];
 
 
 const perfilPermissions = [
@@ -51,87 +88,59 @@ const perfilPermissions = [
     name: "admin",
     permissions: [
       {
-        page: "home",
-        hasSubItem: false,
-        reading: true,
+        page: "Home",
         write: true,
         editing: true,
         delete: true,
       },
       {
-        page: "Clientes",
-        hasSubItem: true,
-        subItems: [{
-          page: "newClient",
-          write: true,
-        }, 
-        {
-          page: "listClients",
-          reading: true,
-          write: true,
-          editing: true,
-          delete: true,
-        }
-        ],
+        page: "NewClient",
+        write: true,
+      }, 
+      {
+        page: "ListClients",
+        write: true,
+        editing: true,
+        delete: true,
+      }
+      ,
+      {
+        page: "ListVehicles",
+        write: true,
+        editing: true,
+        delete: true,
       },
       {
-        page: "Veiculos",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "newVehicle",
-            write: true,
-          },
-          {
-            page: "listVehicles",
-            reading: true,
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
+        page: "NewVehicle",
+        write: true,
+        editing: true,
+        delete: true,
       },
       {
-        page: "Agendamentos",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "agendamento",
-            write: true,
-          },
-          {
-            page: "listAgendamentos",
-            reading: true,
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
+        page: "NewAgendamento",
+        write: true,
       },
       {
-        page: "Administração",
-        hasSubItem: true,
-        subItems: [
-          {
-            page: "users",
-            reading: true,
-            write: true,
-            editing: true,
-            delete: true,
-          },
-          {
-            page: "financeiro",
-            reading: true,
-            write: true,
-            editing: true,
-            delete: true,
-          }
-        ]
+        page: "ListAgendamentos",
+        write: true,
+        editing: true,
+        delete: true,
       },
       {
-        page: "estoque",
+        page: "UsersControl",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Financeiro",
+        write: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Estoque",
         hasSubItem: false,
-        reading: true,
         write: true,
         editing: true,
         delete: true,
@@ -149,12 +158,76 @@ const users = [
     contato: "1195666665",
     cargo: "administrador",
     perfil: "admin",
-    idPerfil: "1"
+    idPerfil: "1",
+    config : {
+      mode: "dark"
+    }
+  }
+];
+
+const mockPermisions = [
+  {
+    "page": "Home",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewClient",
+    "write": true
+  },
+  {
+    "page": "ListClients",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "ListVehicles",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewVehicle",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "NewAgendamento",
+    "write": true
+  },
+  {
+    "page": "ListAgendamentos",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "UsersControl",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "Financeiro",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
+  {
+    "page": "Estoque",
+    "write": true,
+    "editing": true,
+    "delete": true
   }
 ];
 
 export {
   itemsMenu,
   perfilPermissions,
-  users
+  users,
+  mockPermisions,
+  itemsMenuNoHasNewVehicle
 };
