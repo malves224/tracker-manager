@@ -11,7 +11,4 @@ const storage = {
   remove: (key) => localStorage.removeItem(key),
 };
 
-// Safari in incognito has local storage, but size 0
-
-
 export default storage;
