@@ -2,9 +2,7 @@ import React from "react";
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from "../App.js";
-import storage from "../util/storage/store.js";
 import * as mockRequests from "../mockRequests/mockAPI";
-import { render } from "@testing-library/react";
 import { renderWithRouterAndStore } from "./helpers/renderWithRouterAndStore";
 
 const PASSWORD_VALID = '12345678';
@@ -149,7 +147,7 @@ describe('Testas para tela de login', () => {
   });
 
   const mockFuncAuth = jest.spyOn(mockRequests, 'authenticationLogin')
-  .mockImplementation(() => Promise.resolve(mockResponseAuth));
+    .mockImplementation(() => Promise.resolve(mockResponseAuth));
 
   it('Quando o email e senha estão corretos deve se renderizar para rota "/Home"',async () => {
     const { history } = renderWithRouterAndStore(<App />, "/");

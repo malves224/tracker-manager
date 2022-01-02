@@ -1,6 +1,6 @@
 import { ADD_USER, LOGOFF_USER, SWITCH_MODE } from "../actions";
 
-const initialState = {
+export const initialState = {
   email: "",
   id: "",
   login: "",

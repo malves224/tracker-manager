@@ -30,7 +30,7 @@ const lightTheme = createTheme({
   },
 });
 
-function App({token, mode}) {
+function App({token, themeMode}) {
   const [userHasToken, setUserToken ] = React.useState(null);
 
   React.useEffect(() => {
@@ -38,7 +38,7 @@ function App({token, mode}) {
   }, [token]);
 
   return (
-    <ThemeProvider theme={ mode === "dark" ? darkTheme : lightTheme }>
+    <ThemeProvider theme={ themeMode === "dark" ? darkTheme : lightTheme }>
       {userHasToken&&
         <ResponsiveDrawer />}
       <Switch>
@@ -106,7 +106,7 @@ App.propTypes = {
     PropTypes.any,
     PropTypes.string,
   ]),
-  mode: PropTypes.string,
+  themeMode: PropTypes.string,
 };
 
 export default  connect(mapStateToProps)(App);
