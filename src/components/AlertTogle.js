@@ -4,23 +4,20 @@ import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 
-const AlertTogle = ({alertOptions, children}) => {
-  const { 
-    isOpen, 
-    severity,
-    setOpen 
-  } = alertOptions;
+const AlertTogle = ({severity, children, switchValue}) => {
+  const [alertOpen, setAlertOpen] = switchValue;
+
   return (
-    <Collapse sx={ {position: "absolute", top:"5px", left: "30%"} } in={ isOpen }>
+    <Collapse sx={ {position: "absolute", top:"5px", left: "30%"} } in={ alertOpen }>
       <Alert
         severity={ severity }
         variant="filled"
         action={
           <IconButton
             aria-label="close"
-            size="small"
+            size="medium"
             onClick={ () => {
-              setOpen(false);
+              setAlertOpen(false);
             } }
           >
             <CloseIcon fontSize="inherit" />
@@ -35,12 +32,12 @@ const AlertTogle = ({alertOptions, children}) => {
 };
 
 AlertTogle.propTypes = {
-  alertOptions: PropTypes.shape({
-    isOpen: PropTypes.bool.isRequired,
-    severity: PropTypes.string,
-    setOpen: PropTypes.func.isRequired,
-  }),
+  severity: PropTypes.string,
   children: PropTypes.node,
+  switchValue: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.func,
+  ]))
 };
 
 

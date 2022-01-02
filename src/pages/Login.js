@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {  useNavigate } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import storage from "../util/storage/store";
 import { connect } from "react-redux";
 import { setUser } from "../actions";
@@ -26,12 +26,12 @@ const initialState = () => ({
 
 function Login({setUserAction}) {
   const [acesso, setAcesso] = useState(initialState());
-  const [alertOpen, setAlertOpen] = useState(false);
   const [isLoading, setLoading ] = useState(false);
-  const navigate = useNavigate();
+  const [alertOpen, setAlertOpen] = useState(false);
+  const navigate = useHistory();
   
   useEffect(() => {
-    storage.get("token") !== null && navigate("/Home");
+    storage.get("token") !== null && navigate.push("/Home");
   });
 
   const handleChange = ({target}) => {
@@ -89,11 +89,8 @@ function Login({setUserAction}) {
       } }
     >
       <AlertTogle
-        alertOptions={ {
-          severity:"error",
-          isOpen: alertOpen,
-          setOpen: setAlertOpen,
-        } }
+        severity="error"
+        switchValue={ [alertOpen, setAlertOpen] }
       >
         Não foi possível encontrar um usuário com esse e-mail e senha.      
       </AlertTogle>

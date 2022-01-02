@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import storage from "../util/storage/store";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import PropTypes from "prop-types";
@@ -21,7 +21,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 function AccountMenu({getNameUser, logOff, getTheme, switchTheme}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +39,7 @@ function AccountMenu({getNameUser, logOff, getTheme, switchTheme}) {
     storage.remove("token");// BACK-END Função que irá deslogar o usuario
     storage.remove("dataUser");// BACK-END Função que irá deslogar o usuario
     logOff();
-    navigate("/"); 
+    navigate.push("/"); 
   };
   
   return (

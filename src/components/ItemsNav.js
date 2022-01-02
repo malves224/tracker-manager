@@ -4,7 +4,7 @@ import { ExpandLess, ExpandMore,
 } from "@mui/icons-material";
 import { Collapse, 
   Divider, List, ListItemButton, ListItemText, Toolbar } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { icons } from "../util/dataIcons";
 
 const IndexDivider = 3;
@@ -18,7 +18,7 @@ function ItemsNav({items, handleDrawerToggle: togle }) {
     configuração: false,
     estoque: false
   });
-  const navigate = useNavigate();
+  const navigate = useHistory();
   const location = useLocation();
 
   const onClickDropdown = (item) => {
@@ -30,13 +30,13 @@ function ItemsNav({items, handleDrawerToggle: togle }) {
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
     } else {
-      navigate(route);
+      navigate.push(route);
       togle();
     }
   };
 
   const onClickDropdownSubItem = (route) => {
-    navigate(route);
+    navigate.push(route);
     togle();
   };
 

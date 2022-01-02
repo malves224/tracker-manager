@@ -29,6 +29,7 @@ function ResponsiveDrawer(props) {
 
   React.useEffect(() => {
     resquesItemsNavAllowed(setItemsMenu);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[getPermissions]);
 
   const handleDrawerToggle = () => {

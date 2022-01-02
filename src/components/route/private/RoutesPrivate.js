@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate} from "react-router-dom";
+import { Redirect} from "react-router-dom";
 import { connect } from "react-redux";
 import storage from "../../../util/storage/store";
 import PropTypes from "prop-types";
@@ -7,7 +7,6 @@ import { setUser } from "../../../actions";
 import NoAcess from "../../../pages/NoAcess";
 
 function RequireAuth({children, getPermissions, setUserAction}) {
-
   const updateUser = () => {
     setUserAction(storage.get("dataUser"));
   };
@@ -15,7 +14,7 @@ function RequireAuth({children, getPermissions, setUserAction}) {
   const userHasToken = storage.get("token") !== null;
 
   if(!userHasToken) {
-    return <Navigate to="/" />;
+    return <Redirect to="/" />;
   }
   
   getPermissions.length === 0

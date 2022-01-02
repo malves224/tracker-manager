@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import PropTypes from "prop-types";
 import RequireAuth from "./components/route/private/RoutesPrivate";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { connect } from "react-redux";
@@ -30,8 +30,7 @@ const lightTheme = createTheme({
   },
 });
 
-function App({user}) {
-  const {token, config} = user;
+function App({token, mode}) {
   const [userHasToken, setUserToken ] = React.useState(null);
 
   React.useEffect(() => {
@@ -39,50 +38,75 @@ function App({user}) {
   }, [token]);
 
   return (
-    <ThemeProvider theme={ config.mode === "dark" ? darkTheme : lightTheme }>
+    <ThemeProvider theme={ mode === "dark" ? darkTheme : lightTheme }>
       {userHasToken&&
         <ResponsiveDrawer />}
-      <Routes>
-        <Route path="/" element={ <Login /> } />
-        <Route path="/Home" element={ <RequireAuth><Home /></RequireAuth> } />
-        <Route path="/NewClient" element={ <RequireAuth><NewClient /></RequireAuth> } />
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={ () => <Login /> }
+        />
+        <Route
+          path="/Home"
+          render={ () => <RequireAuth><Home /></RequireAuth>  }
+        />
+        <Route
+          path="/NewClient"
+          render={ () => <RequireAuth><NewClient /></RequireAuth> }
+        />
         <Route
           path="/ListClients"
-          element={ <RequireAuth><ListClients /></RequireAuth> } 
+          render={ () => <RequireAuth><ListClients /></RequireAuth> } 
         />
-        <Route path="/NewVehicle" element={ <RequireAuth><NewVehicle /></RequireAuth> } />
+        <Route
+          path="/NewVehicle"
+          render={ () => <RequireAuth><NewVehicle /></RequireAuth> }
+        />
         <Route
           path="/listVehicles"
-          element={ <RequireAuth><ListVehicles /></RequireAuth> }
+          render={ () => <RequireAuth><ListVehicles /></RequireAuth> }
         />
         <Route
           path="/NewAgendamento"
-          element={ <RequireAuth><NewAgendamento /></RequireAuth> } 
+          render={ () => <RequireAuth><NewAgendamento /></RequireAuth> } 
         />
         <Route
           path="/ListAgendamentos"
-          element={ <RequireAuth><ListAgendamentos /></RequireAuth> }
+          render={ () => <RequireAuth><ListAgendamentos /></RequireAuth> }
         />
         <Route
           path="/UsersControl"
-          element={ <RequireAuth><UsersControl /></RequireAuth> }
+          render={ () => <RequireAuth><UsersControl /></RequireAuth> }
         />
-        <Route path="/Financeiro" element={ <RequireAuth><Financeiro /></RequireAuth> } />
-        <Route path="/Estoque" element={ <RequireAuth><Estoque /></RequireAuth> } />
+        <Route
+          path="/Financeiro"
+          render={ () => <RequireAuth><Financeiro /></RequireAuth> }
+        />
+        <Route path="/Estoque" render={ () => <RequireAuth><Estoque /></RequireAuth> } />
         <Route
           path="*"
-          element={ 
-            <h1 id="notfound">Not found</h1> 
-          }
+          render={ () =>
+            <h1 id="notfound">Not found</h1> }
         />
-      </Routes>
+
+      </Switch>
     </ThemeProvider>
 
   );
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  token: state.user.token,
+  themeMode: state.user.config.mode,
 });
+
+App.propTypes = {
+  token: PropTypes.oneOfType([
+    PropTypes.any,
+    PropTypes.string,
+  ]),
+  mode: PropTypes.string,
+};
 
 export default  connect(mapStateToProps)(App);
