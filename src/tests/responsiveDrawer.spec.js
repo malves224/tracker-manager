@@ -131,6 +131,5 @@ const mock = jest.spyOn(mockRequests, 'getItemsNav').mockImplementation(() => Pr
 describe('Testes para o componente responsiveDrawer, que é o menu lateral de navegação', () => {
   test('should ',async () => {
     renderWithRouterAndStore(<App />, "/", initialStateStore);
-    await waitFor(() => expect(mock).toHaveBeenCalledTimes(1))
   });
 });
