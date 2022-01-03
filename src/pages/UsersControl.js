@@ -4,9 +4,17 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import PaperResponsive from "../components/PaperResponsive";
+import { UsersList } from ".";
 
 function UsersControl() {
   const [value, setValue] = React.useState(0);
+  const options = [{
+    label: "Usuarios",
+    component: <UsersList />,
+  }, {
+    label: "Perfil de acesso",
+    component: <h1>Perfil de acesso</h1>,
+  }];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -38,11 +46,14 @@ function UsersControl() {
             variant="fullWidth"
             aria-label="action tabs example"
           >
-            <Tab label="Usuarios" { ...a11yProps(0) } />
-            <Tab label="Perfil de acesso" { ...a11yProps(1) } />
+            {
+              options.map(({label}, index) => (
+                <Tab key={ label } label={ label } { ...a11yProps(index) } />))
+            }
           </Tabs>
         </AppBar>
       </Box>
+      {options[value].component}
     </PaperResponsive>
   );
 }
