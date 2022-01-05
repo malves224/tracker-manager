@@ -14,6 +14,14 @@ const getItemsNav = () => {
   });
 };
 
+const getUsersList = () => {
+  return new Promise ((resolve) => {
+    setTimeout(() => {
+      resolve(users);
+    }, TIME_RESPONSE);
+  });
+};
+
 const authenticationLogin = (login, password) => {
   return new Promise ((resolve, reject) => {
     setTimeout(() => {
@@ -38,4 +46,5 @@ const authenticationLogin = (login, password) => {
 export {
   getItemsNav,
   authenticationLogin,
+  getUsersList
 };
