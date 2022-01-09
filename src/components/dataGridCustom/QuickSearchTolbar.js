@@ -1,22 +1,11 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-multi-comp */
 import React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import {
-  DataGrid,
-} from "@mui/x-data-grid";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-
-
-
-function escapeRegExp(value) {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
+import "./style/dataGridCustom.css";
 
 function QuickSearchToolbar({value, onChange, clearSearch, button}) {
 
@@ -75,53 +64,7 @@ QuickSearchToolbar.propTypes = {
   clearSearch: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
+  button: PropTypes.func.isRequired,
 };
 
-
-// eslint-disable-next-line react/prop-types
-function DataGridCustom({rowsData, columnsData, onClickRow, buttonAdd}) {
-  
-  const [searchText, setSearchText] = React.useState("");
-  const [rows, setRows] = React.useState(rowsData);
-  
-  const requestSearch = (searchValue) => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
-    const filteredRows = rowsData.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRows(filteredRows);
-  };
-  
-  React.useEffect(() => {
-    setRows(rowsData);
-  }, []);
-  
-  return (
-    <Box sx={ { height: "calc(92vh)", width: 1 } }>
-      <DataGrid
-        isRowSelectable={ (data) => onClickRow(data) }
-        editMode="row"
-        sx={ { padding: "5px"} }
-        components={ { Toolbar: QuickSearchToolbar } }
-        rows={ rows }
-        columns={ columnsData }
-        componentsProps={ {
-          toolbar: {  
-            value: searchText,
-            onChange: (event) => requestSearch(event.target.value),
-            clearSearch: () => requestSearch(""),
-            button: buttonAdd
-          },
-        } }
-      />
-    </Box>
-  );
-}
-
-DataGridCustom.propTypes = { 
-};
-
-export default DataGridCustom;
+export default QuickSearchToolbar;

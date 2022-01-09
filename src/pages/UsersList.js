@@ -1,42 +1,56 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable max-len */
 import React, {useEffect, useState} from "react";
-import DataGridCustom from "../components/DataGridCustom";
+import DataGridCustom from "../components/dataGridCustom/DataGridCustom";
 import { getUsersList } from "../mockRequests/mockAPI";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Button } from "@mui/material";
 
 function UsersList() {
 
   const [columns] = useState([
-    { field: "login", headerName: "Login", width: 150 },
+    { field: "login", headerName: "Login", width: 200 },
     { field: "nome", headerName: "Nome", width: 150 },
-    { field: "perfil de acesso", headerName: "Perfil de acesso", width: 150 },
+    { field: "perfil", headerName: "Perfil de acesso", width: 150 },
   ]);
 
-  const [rowsData1, setRowsData ] = useState([]);
+  const [rowsData, setRowsData ] = useState([]);
 
   const requestUser = async () => {
     const response = await getUsersList();
+    const userList = response.map(({id, login, fullName, perfil}) => ({
+      id,
+      login,
+      nome: fullName,
+      perfil
+    }));
+    // implementar local storage simulando db
+    setRowsData(userList);
+  };
+  
+  const buttonAddUser = () => {
+    return (
+      <Button
+        onClick={ () => console.log("redirecionar para tela de add") }
+        sx={ {display: "flex"} } 
+        variant="contained"
+      >
+        <AddCircleIcon />{"Novo usuário"}
+      </Button>
+    );
   };
 
+  useEffect(() => {
+    requestUser();
+    return () => {
+      setRowsData([]);
+    };
+  }, []);
 
-  const rowsData = [
-    // eslint-disable-next-line sonarjs/no-duplicate-string
-    { id: "1", Login: "1@gmsail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "2", Login: "a1@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "3", Login: "1ss@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "5", Login: "1dd@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "6", Login: "fff1@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "7", Login: "1aaa@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "8", Login: "1@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-    { id: "9", Login: "1@gmail.com", Nome: "Matheus", "Perfil de acesso": "Admin", "Ações": "editar excluir" },
-  ];
-    
   return (
     <DataGridCustom
       rowsData={ rowsData }
       columnsData={ columns } 
       onClickRow={ (data) => console.log(`redirecionar para o id ${data.id}`) }
-      buttonAdd={ () => <button type="button">Botao para add novo entidade</button> }
+      buttonAdd={ buttonAddUser }
     />
   );
 }
