@@ -26,13 +26,14 @@ const getUserById = (id) => {
   return new Promise ((resolve) => {
     setTimeout(() => {
       const user = users.filter((user) => user.id === id)[0];
+      console.log(user);
       const userForReturn = { 
         nome: user.fullName,
         cargo: user.cargo,
         contato: user.contato,
         email: user.login,
         perfilAcesso: perfilPermissions
-          .filter((perfil) => user.id === perfil.id)[0].name// simulaçao de innerJOin
+          .filter((perfil) => user.idPerfil === perfil.id)[0].name// simulaçao de innerJOin
       };
       resolve([userForReturn]);
     }, TIME_RESPONSE);

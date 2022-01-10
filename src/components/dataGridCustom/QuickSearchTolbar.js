@@ -47,6 +47,7 @@ function QuickSearchToolbar({value, onChange, clearSearch, button}) {
               title="Clear"
               aria-label="Clear"
               size="small"
+              sx={ { visibility: value ? "visible" : "hidden" } }
               onClick={ clearSearch }
             >
               <ClearIcon fontSize="small" />
