@@ -1,6 +1,10 @@
-/* eslint-disable react/jsx-max-depth */
+/* eslint-disable no-unused-vars */
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { getUserById } from "../mockRequests/mockAPI";
 import PaperResponsive from "../components/PaperResponsive";
 
 const sxContainer = {
@@ -30,91 +34,165 @@ const sxBoxForm = {
   borderRadius: "5px",
   margin: "10px",
   padding: "10px 10px",
-  width: "95%"
+  width: "90%"
 };
 
 const sxBtnsEdit = {
   display: "flex", 
-  flexFlow: "row", width: "20%", 
+  flexFlow: "row", width: "250px",
+  alignItems: "center",
   justifyContent: "space-around"
 };
 
+const initialStateUser = {
+  nome: "",
+  cargo: "",
+  contato: "",
+  email: "",
+  perfilAcesso: "",
+  senha: ""
+};
+
 function UserInfo() {
+  const [userInfo, setUserInfo] = useState(initialStateUser);
+  const [isEditing, setEditing] = useState(false);
+  const location = useLocation();
+
+
+  const requestUser = async () => {
+    const { pathname } = location;
+    const [,,idUser] = pathname.split("/");
+    const response = await getUserById(idUser);
+    setUserInfo({
+      ...initialStateUser,
+      ...response[0],
+    });
+    // trazer tbm do localStorage futuramente
+  };
+
+  useEffect(() => {
+    requestUser();
+    return () => {
+      setUserInfo(initialStateUser);
+    };
+  }, []);
 
   const handleChangeGeneric = ({target}) => {
-    console.log(target.id);
+    const { id: name, value } = target;
+    setUserInfo({
+      ...userInfo,
+      [name]: value,
+    });
+  };
+
+  const handleClickCancel = () => {
+    setEditing(false);
+    requestUser();
+  };
+
+  const handleClickSave = () => {
+    console.log("salvar usuario no local storage");
   };
 
   return (
     <PaperResponsive sx={ sxContainer }>
       <Box sx={ sxBox }>
-        <Box sx={ {paddingTop: "10px"} }>
-          <Typography
-            variant="h1"
-            sx={ {fontSize: "26px"} }
-          >
-            Informações do usuário
-          </Typography>
-        </Box>
         <Box sx={ { display: "flex", justifyContent: "flex-end", width: "100%"} }>
+          <Box sx={ {padding: "5px 0"} }>
+            <Typography
+              variant="h1"
+              sx={ {fontSize: "26px", marginLeft: "10px"} }
+            >
+              Informações do usuário
+            </Typography>
+          </Box>
+
           <Box 
             sx={ sxBtnsEdit }
           >
-            <button type="button">editar</button>
-            <button type="button">exluir</button>
+            <Button
+              onClick={ () => setEditing(true) }
+              color="primary"
+              size="small"
+              variant="contained"
+              startIcon={ <EditIcon /> }
+            >editar
+            </Button>
+            <Button
+              color="error"
+              size="small"
+              variant="contained"
+              startIcon={ <DeleteIcon /> }
+            >excluir
+            </Button>
           </Box>
         </Box>
         <Box sx={ sxBoxForm }>
           <TextField
             id="nome"
-            disabled
+            disabled={ !isEditing }
             label="Nome"
             onChange={ handleChangeGeneric }
             variant="standard"
-            value="Matheus Alves de Oliveira"
+            value={ userInfo.nome }
           />
           <TextField
             id="cargo"
+            disabled={ !isEditing }
             label="Cargo"
-            value="Diretor"
+            onChange={ handleChangeGeneric }
+            value={ userInfo.cargo }
             variant="standard"
           />
           <TextField
             id="contato"
+            disabled={ !isEditing }
             label="Contato"
+            onChange={ handleChangeGeneric }
             type="tel"
             variant="standard"
-            value="119565424"
+            value={ userInfo.contato }
           />
           <TextField
             id="email"
+            disabled={ !isEditing }
             label="Email"
+            onChange={ handleChangeGeneric }
             type="email"
             variant="standard"
-            value="email@gmail.com"
+            value={ userInfo.email }
           />
           <TextField
+            disabled={ !isEditing }
             id="perfilAcesso"
             label="Perfil de acesso"
+            onChange={ handleChangeGeneric }
             variant="standard"
+            value={ userInfo.perfilAcesso }
           />
           <TextField
+            disabled={ !isEditing }
             id="senha"
             label="Senha"
+            onChange={ handleChangeGeneric }
             type="password"
             variant="standard"
-          />
-          <TextField
-            id="standard-helperText"
-            label="Helper text"
-            defaultValue="Default Value"
-            helperText="Some important text"
-            variant="standard"
+            value={ userInfo.senha }
           />
         </Box>
-        <Box sx={ { display: "flex"} }>
-          <Button variant="contained">Salvar</Button>
-          <Button variant="contained">Cancelar</Button>
+        <Box sx={ { display: "flex", width: "80%", justifyContent: "space-around"} }>
+          <Button
+            onClick={ handleClickSave }
+            disabled={ !isEditing }
+            variant="contained"
+          >Salvar
+          </Button>
+          <Button
+            onClick={ handleClickCancel }
+            disabled={ !isEditing }
+            variant="contained"
+          >Cancelar
+          </Button>
         </Box>
       </Box>
     </PaperResponsive>

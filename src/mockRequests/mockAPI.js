@@ -22,6 +22,23 @@ const getUsersList = () => {
   });
 };
 
+const getUserById = (id) => {
+  return new Promise ((resolve) => {
+    setTimeout(() => {
+      const user = users.filter((user) => user.id === id)[0];
+      const userForReturn = { 
+        nome: user.fullName,
+        cargo: user.cargo,
+        contato: user.contato,
+        email: user.login,
+        perfilAcesso: perfilPermissions
+          .filter((perfil) => user.id === perfil.id)[0].name// simulaçao de innerJOin
+      };
+      resolve([userForReturn]);
+    }, TIME_RESPONSE);
+  });
+};
+
 const authenticationLogin = (login, password) => {
   return new Promise ((resolve, reject) => {
     setTimeout(() => {
@@ -46,5 +63,6 @@ const authenticationLogin = (login, password) => {
 export {
   getItemsNav,
   authenticationLogin,
-  getUsersList
+  getUsersList,
+  getUserById
 };
