@@ -37,7 +37,7 @@ const sxBtnsEdit = {
 };
 
 
-function EditUnicEntity({children, title, setEditing, 
+function EditUnicEntity({children, tittle, setEditing, 
   isEditing, handleClickExcluir, handleClickSave, handleClickCancel}) {
   return (
     <PaperResponsive>
@@ -48,7 +48,7 @@ function EditUnicEntity({children, title, setEditing,
               variant="h1"
               sx={ {fontSize: "26px", marginLeft: "10px"} }
             >
-              {title}
+              {tittle}
             </Typography>
           </Box>
           <Box 
@@ -63,7 +63,7 @@ function EditUnicEntity({children, title, setEditing,
             >editar
             </Button>
             <Button
-              onClick={ handleClickExcluir() }
+              onClick={ handleClickExcluir }
               color="error"
               size="small"
               variant="contained"
@@ -99,7 +99,7 @@ function EditUnicEntity({children, title, setEditing,
 
 EditUnicEntity.propTypes = {
   children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
+  tittle: PropTypes.string.isRequired,
   setEditing: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
   handleClickExcluir: PropTypes.func.isRequired,
