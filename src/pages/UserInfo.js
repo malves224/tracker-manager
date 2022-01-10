@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -6,12 +5,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { getUserById } from "../mockRequests/mockAPI";
 import PaperResponsive from "../components/PaperResponsive";
-
-const sxContainer = {
-  display: "flex", 
-  flexFlow: "column", 
-  alignItems: "center",
-};
 
 const sxBox = {
   display: "flex", 
@@ -95,7 +88,7 @@ function UserInfo() {
   };
 
   return (
-    <PaperResponsive sx={ sxContainer }>
+    <PaperResponsive>
       <Box sx={ sxBox }>
         <Box sx={ { display: "flex", justifyContent: "space-between", width: "100%"} }>
           <Box sx={ {padding: "5px 0"} }>
