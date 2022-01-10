@@ -145,6 +145,12 @@ const perfilPermissions = [
         editing: true,
         delete: true,
       },
+      {
+        "page": "UserInfo",
+        "write": true,
+        "editing": true,
+        "delete": true
+      },
     ]
   }
 ];
@@ -152,6 +158,7 @@ const perfilPermissions = [
 const users = [
   {
     id: "1",
+    status: "ativo",
     login: "malves224@gmail.com",
     password: "123456789",
     fullName: "matheus alves",
@@ -221,7 +228,13 @@ const mockPermisions = [
     "write": true,
     "editing": true,
     "delete": true
-  }
+  },
+  {
+    "page": "UsersList",
+    "write": true,
+    "editing": true,
+    "delete": true
+  },
 ];
 
 export {

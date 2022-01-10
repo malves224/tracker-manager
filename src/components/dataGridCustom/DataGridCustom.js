@@ -30,7 +30,6 @@ function DataGridCustom({rowsData, columnsData, onClickRow, buttonAdd}) {
   return (
     <Box>
       <DataGrid
-        disableColumnFilter
         pageSize={ 25 }
         getRowClassName={ () => "row" }
         autoHeight

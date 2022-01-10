@@ -14,6 +14,7 @@ import { Login,
   UsersControl,
   Financeiro,
   Estoque,
+  UserInfo,
   ListVehicles} from "./pages";
 import "./App.css";
 import  { ResponsiveDrawer }  from "./components";
@@ -76,8 +77,13 @@ function App({token, themeMode}) {
           render={ () => <RequireAuth><ListAgendamentos /></RequireAuth> }
         />
         <Route
+          exact
           path="/UsersControl"
           render={ () => <RequireAuth><UsersControl /></RequireAuth> }
+        />
+        <Route
+          path="/UserInfo/:id"
+          render={ () => <RequireAuth><UserInfo /></RequireAuth> }
         />
         <Route
           path="/Financeiro"
