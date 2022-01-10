@@ -7,15 +7,27 @@ import { Button } from "@mui/material";
 
 function UsersList() {
   const history = useHistory();
-
+  const [searchText, setSearchText] = useState("");
   const [columns] = useState([
     { field: "login", headerName: "Login", width: 200 },
     { field: "nome", headerName: "Nome", width: 150 },
     { field: "perfil", headerName: "Perfil de acesso", width: 150 },
     { field: "status", headerName: "Status", width: 150 },
   ]);
-
   const [rowsData, setRowsData ] = useState([]);
+  const [rowsFiltred, setRowsFiltred ] = useState([]);
+
+  const requestSearch = (searchValue) => {
+    setSearchText(searchValue);
+    const searchValueClean = searchValue.toLowerCase();
+    const filteredRows = rowsData.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return row[field].toLowerCase().includes(searchValueClean);
+      });
+    });
+    console.log(filteredRows);
+    setRowsFiltred(filteredRows);
+  };
 
   const requestUser = async () => {
     const response = await getUsersList();
@@ -28,22 +40,26 @@ function UsersList() {
     }));
     // implementar local storage simulando db
     setRowsData(userList);
+    return userList;
   };
   
   const buttonAddUser = () => {
     return (
       <Button
+        color="success"
+        size="small"
+        startIcon={ <AddCircleIcon /> }
         onClick={ () => console.log("redirecionar para tela de add") }
-        sx={ {display: "flex"} } 
+        sx={ {display: "flex", fontSize: "12px"} } 
         variant="contained"
       >
-        <AddCircleIcon />{"Novo usuário"}
+        Novo usuário
       </Button>
     );
   };
 
   useEffect(() => {
-    requestUser();
+    requestUser().then((response) => setRowsFiltred(response));
     return () => {
       setRowsData([]);
     };
@@ -51,7 +67,9 @@ function UsersList() {
 
   return (
     <DataGridCustom
-      rowsData={ rowsData }
+      requestSearch={ requestSearch }
+      searchText={ searchText }
+      rowsData={ rowsFiltred }
       columnsData={ columns } 
       onClickRow={ (data) => history.push(`/UserInfo/${data.id}`) }
       buttonAdd={ buttonAddUser }

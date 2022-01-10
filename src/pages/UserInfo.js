@@ -97,7 +97,7 @@ function UserInfo() {
   return (
     <PaperResponsive sx={ sxContainer }>
       <Box sx={ sxBox }>
-        <Box sx={ { display: "flex", justifyContent: "flex-end", width: "100%"} }>
+        <Box sx={ { display: "flex", justifyContent: "space-between", width: "100%"} }>
           <Box sx={ {padding: "5px 0"} }>
             <Typography
               variant="h1"
@@ -182,12 +182,15 @@ function UserInfo() {
         </Box>
         <Box sx={ { display: "flex", width: "80%", justifyContent: "space-around"} }>
           <Button
+            size="small"
+
             onClick={ handleClickSave }
             disabled={ !isEditing }
             variant="contained"
           >Salvar
           </Button>
           <Button
+            size="small"
             onClick={ handleClickCancel }
             disabled={ !isEditing }
             variant="contained"

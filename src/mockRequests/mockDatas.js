@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // não excluir, os dados estão sendo utilizados para testes.
 
 const itemsMenu = [
@@ -169,7 +170,36 @@ const users = [
     config : {
       mode: "dark"
     }
+  },
+  {
+    id: "2",
+    status: "ativo",
+    login: "malves224@sgmail.com",
+    password: "123456789",
+    fullName: "theus alves",
+    contato: "1195666665",
+    cargo: "administrador",
+    perfil: "admin",
+    idPerfil: "1",
+    config : {
+      mode: "dark"
+    }
+  },
+  {
+    id: "3",
+    status: "ativo",
+    login: "irineu@sgmail.com",
+    password: "123456789",
+    fullName: "irineu alves",
+    contato: "11956666ds",
+    cargo: "administrador",
+    perfil: "admin",
+    idPerfil: "1",
+    config : {
+      mode: "dark"
+    },
   }
+
 ];
 
 const mockPermisions = [

@@ -1,5 +1,7 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-multi-comp */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import {
@@ -8,25 +10,9 @@ import {
 import QuickSearchToolbar from "./QuickSearchTolbar";
 import "./style/dataGridCustom.css";
 
-function escapeRegExp(value) {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
+function DataGridCustom({
+  rowsData, columnsData, onClickRow, buttonAdd, requestSearch, searchText}) {
 
-function DataGridCustom({rowsData, columnsData, onClickRow, buttonAdd}) {
-  
-  const [searchText, setSearchText] = React.useState("");
-  
-  const requestSearch = (searchValue) => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
-    const filteredRows = rowsData.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRows(filteredRows);
-  };
-  
   return (
     <Box>
       <DataGrid
@@ -56,7 +42,9 @@ DataGridCustom.propTypes = {
   rowsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   columnsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClickRow: PropTypes.func.isRequired,
-  buttonAdd: PropTypes.func.isRequired
+  buttonAdd: PropTypes.func.isRequired,
+  requestSearch: PropTypes.func.isRequired,
+  searchText: PropTypes.string.isRequired,
 };
 
 export default DataGridCustom;
