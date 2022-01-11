@@ -1,4 +1,5 @@
 import { TextField } from "@mui/material";
+import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getUserById } from "../mockRequests/mockAPI";
@@ -13,9 +14,18 @@ const initialStateUser = {
   senha: ""
 };
 
+const initialStateValidation = {
+  nome: true,
+  cargo: true,
+  contato: true,
+  email: true,
+  perfilAcesso: true,
+  senha: true
+};
+
 function UserInfo() {
   const [userInfo, setUserInfo] = useState(initialStateUser);
-  const [userInfoEdit, setUserInfoEdit] = useState();
+  const [validation, setValidation] = useState(initialStateValidation);
   const [isEditing, setEditing] = useState(false);
   const location = useLocation();
 
@@ -46,9 +56,22 @@ function UserInfo() {
     });
   };
 
+  const handleBlurGeneric = ({target}) => {
+    const { id: name, value } = target;
+    setValidation({
+      ...validation,
+      [name]: validateData.check(name, value)
+    });
+  };
+
   const handleClickCancel = () => {
     setEditing(false);
     requestUser();
+    setValidation(initialStateValidation);
+  };
+
+  const handleClickEdit = () => {
+    setEditing(true);
   };
 
   const handleClickExcluir = () => {
@@ -62,7 +85,7 @@ function UserInfo() {
   return (
     <EditUnicEntity
       tittle="Informações do usuario"
-      setEditing={ setEditing }
+      setEditing={ handleClickEdit }
       isEditing={ isEditing }
       handleClickSave={ handleClickSave }
       handleClickExcluir={ handleClickExcluir }
@@ -86,6 +109,10 @@ function UserInfo() {
       />
       <TextField
         id="contato"
+        error={ !validation.contato }
+        inputProps={ {maxlength: "11"} }
+        helperText={ !validation.contato && "Contato Invalido, Confira o contato" }
+        onBlur={ handleBlurGeneric }
         disabled={ !isEditing }
         label="Contato"
         onChange={ handleChangeGeneric }
@@ -95,6 +122,9 @@ function UserInfo() {
       />
       <TextField
         id="email"
+        error={ !validation.email }
+        helperText={ !validation.email && "Email Invalido." }
+        onBlur={ handleBlurGeneric }
         disabled={ !isEditing }
         label="Email"
         onChange={ handleChangeGeneric }
@@ -114,6 +144,9 @@ function UserInfo() {
         disabled={ !isEditing }
         id="senha"
         label="Senha"
+        error={ !validation.senha }
+        helperText={ !validation.senha && "Insira ao menos 8 digitos" }
+        onBlur={ handleBlurGeneric }
         onChange={ handleChangeGeneric }
         type="password"
         variant="standard"

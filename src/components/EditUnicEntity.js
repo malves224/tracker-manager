@@ -26,7 +26,8 @@ const sxBoxForm = {
   borderRadius: "5px",
   margin: "10px",
   padding: "10px 10px",
-  width: "90%"
+  width: "90%",
+  height: "400px"
 };
 
 const sxBtnsEdit = {
@@ -55,7 +56,7 @@ function EditUnicEntity({children, tittle, setEditing,
             sx={ sxBtnsEdit }
           >
             <Button
-              onClick={ () => setEditing(true) }
+              onClick={ setEditing }
               color="primary"
               size="small"
               variant="contained"
