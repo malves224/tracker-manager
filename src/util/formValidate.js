@@ -17,7 +17,11 @@ const validateData = {
   email: checkEmail,
   contato: checkCelular,
   senha: checkPassword,
-  check: (type, value) => validateData[type](value)
+  check: (type, value) => validateData[type](value),
+  checkAllInputs: (dataValidation) => {
+    const keysData = Object.keys(dataValidation);
+    return keysData.every((key) => dataValidation[key]);
+  }
 };
 
 export {

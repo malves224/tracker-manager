@@ -1,9 +1,13 @@
 import { TextField } from "@mui/material";
 import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
+import { AlertTogle } from "../components";
 import { useLocation } from "react-router-dom";
-import { getUserById } from "../mockRequests/mockAPI";
+import { checkPermission, getUserById } from "../mockRequests/mockAPI";
 import EditUnicEntity from "../components/EditUnicEntity";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 
 const initialStateUser = {
   nome: "",
@@ -15,24 +19,27 @@ const initialStateUser = {
 };
 
 const initialStateValidation = {
-  nome: true,
-  cargo: true,
   contato: true,
   email: true,
   perfilAcesso: true,
   senha: true
 };
 
-function UserInfo() {
+const initialStateAlert = {
+  value: "", severity:"warning", open: false
+};
+
+function UserInfo({perfilId}) {
   const [userInfo, setUserInfo] = useState(initialStateUser);
   const [validation, setValidation] = useState(initialStateValidation);
   const [isEditing, setEditing] = useState(false);
+  const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const location = useLocation();
+  const [,pageCurrent,idUser] = location.pathname.split("/");
 
+  const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
 
   const requestUser = async () => {
-    const { pathname } = location;
-    const [,,idUser] = pathname.split("/");
     const response = await getUserById(idUser);
     setUserInfo({
       ...initialStateUser,
@@ -78,8 +85,28 @@ function UserInfo() {
     console.log("excluir usuario, mudando staatus no banco");
   };
 
-  const handleClickSave = () => {
-    console.log("salvar usuario no local storage");
+  const handleClickSave = async () => {
+    // ordem de verificações
+    // 1 verificar os campos de imput 
+    // 2 verificar se tem permisão para tal ação no banck-end
+    try {
+      await checkPermission(perfilId, pageCurrent, "editing");// mudar para uma função que altere o dado no db
+      const isAllInputValid = validateData.checkAllInputs(validation);
+      isAllInputValid 
+        ? setMessageAlert({
+          value: "Usuario alterado com sucesso",
+          severity: "success",
+          open: true,
+        })
+        : setMessageAlert({
+          value: "Por favor verifique os campos em vermelho",
+          severity: "error",
+          open: true,
+        });
+    } catch (error) {
+      const messageError = error.message;
+      console.log(messageError);
+    }
   };
 
   return (
@@ -91,6 +118,12 @@ function UserInfo() {
       handleClickExcluir={ handleClickExcluir }
       handleClickCancel={ handleClickCancel }
     >
+      <AlertTogle
+        severity={ messageAlert.severity }
+        switchValue={ [messageAlert.open, toogleAlert] }
+      >
+        {messageAlert.value}
+      </AlertTogle>
       <TextField
         id="nome"
         disabled={ !isEditing }
@@ -110,7 +143,7 @@ function UserInfo() {
       <TextField
         id="contato"
         error={ !validation.contato }
-        inputProps={ {maxlength: "11"} }
+        inputProps={ {maxLength: "11"} }
         helperText={ !validation.contato && "Contato Invalido, Confira o contato" }
         onBlur={ handleBlurGeneric }
         disabled={ !isEditing }
@@ -156,4 +189,12 @@ function UserInfo() {
   );
 }
 
-export default UserInfo;
+const mapStateToProps = (state) => ({
+  perfilId: state.user.idPerfil,
+});
+
+UserInfo.propTypes = {
+  perfilId: PropTypes.string.isRequired,
+};
+
+export default connect(mapStateToProps)(UserInfo);
