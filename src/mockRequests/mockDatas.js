@@ -141,7 +141,6 @@ const perfilPermissions = [
       },
       {
         page: "Estoque",
-        hasSubItem: false,
         write: true,
         editing: true,
         delete: true,

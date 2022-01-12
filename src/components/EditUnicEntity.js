@@ -1,10 +1,12 @@
+/* eslint-disable react/jsx-max-depth */
 import { Box, Button, Typography } from "@mui/material";
+import React, {useState} from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 import ModalConfirmation from "./ModalConfirmation";
-import React, {useState} from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PaperResponsive from "./PaperResponsive";
+
 
 const sxBox = {
   display: "flex", 
@@ -28,7 +30,7 @@ const sxBoxForm = {
   margin: "10px",
   padding: "10px 10px",
   width: "90%",
-  height: "400px"
+  height: "calc(60vh)"
 };
 
 const sxBtnsEdit = {
@@ -69,21 +71,23 @@ function EditUnicEntity({children, tittle, setEditing,
             sx={ sxBtnsEdit }
           >
             <Button
+              sx={ {minWidth: "44px"} }
               onClick={ setEditing }
-              color="primary"
               size="small"
               variant="contained"
-              startIcon={ <EditIcon /> }
-            >Editar
+            >
+              <EditIcon />
             </Button>
             <Button
+              sx={ {minWidth: "44px"} }
               onClick={ () => setOpenModal(true) }
-              color="error"
               size="small"
+              color="error"
               variant="contained"
-              startIcon={ <DeleteIcon /> }
-            >Excluir
+            >
+              <DeleteIcon />
             </Button>
+
           </Box>
         </Box>
         <Box sx={ sxBoxForm }>
@@ -92,7 +96,7 @@ function EditUnicEntity({children, tittle, setEditing,
         <Box sx={ { display: "flex", width: "80%", justifyContent: "space-around"} }>
           <Button
             size="small"
-
+            color="success"
             onClick={ handleClickSave }
             disabled={ !isEditing }
             variant="contained"
@@ -110,6 +114,8 @@ function EditUnicEntity({children, tittle, setEditing,
     </PaperResponsive>
   );
 }
+
+
 
 EditUnicEntity.propTypes = {
   children: PropTypes.node.isRequired,
