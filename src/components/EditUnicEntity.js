@@ -1,7 +1,8 @@
 import { Box, Button, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
-import React from "react";
+import ModalConfirmation from "./ModalConfirmation";
+import React, {useState} from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PaperResponsive from "./PaperResponsive";
 
@@ -40,8 +41,20 @@ const sxBtnsEdit = {
 
 function EditUnicEntity({children, tittle, setEditing, 
   isEditing, handleClickExcluir, handleClickSave, handleClickCancel}) {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <PaperResponsive>
+      <ModalConfirmation
+        actionCaseConfirm={ handleClickExcluir }
+        stateForOpen={ [openModal, setOpenModal] }
+      >
+        <Typography
+          variant="p"
+          sx={ {mb: 2} }
+        >
+          Você tem certeza que deseja excluir?
+        </Typography>      
+      </ModalConfirmation>
       <Box sx={ sxBox }>
         <Box sx={ { display: "flex", justifyContent: "space-between", width: "100%"} }>
           <Box sx={ {padding: "5px 0"} }>
@@ -61,15 +74,15 @@ function EditUnicEntity({children, tittle, setEditing,
               size="small"
               variant="contained"
               startIcon={ <EditIcon /> }
-            >editar
+            >Editar
             </Button>
             <Button
-              onClick={ handleClickExcluir }
+              onClick={ () => setOpenModal(true) }
               color="error"
               size="small"
               variant="contained"
               startIcon={ <DeleteIcon /> }
-            >excluir
+            >Excluir
             </Button>
           </Box>
         </Box>
