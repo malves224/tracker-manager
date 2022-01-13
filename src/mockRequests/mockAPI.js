@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   itemsMenu,
   users,
@@ -26,15 +27,27 @@ const getUsersList = () => {
   });
 };
 
+const getPerfilList = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const allUser = perfilPermissions.map((perfil) => perfil.name);
+      resolve(allUser);
+    }, TIME_RESPONSE);
+  });
+};
+
 const checkPermission = (idPerfil, pageForCheck, tipoPerm) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const perfilData = perfilPermissions
         .filter((perfil) => perfil.id === idPerfil);
+
       const pageData = perfilData[0].permissions
         .filter((page) => page.page === pageForCheck);
-      pageData[0][tipoPerm] ? resolve(true) :
-        reject(new Error("sem permisão para essa ação"));
+
+      pageData[0][tipoPerm]
+        ? resolve(true) 
+        : reject(false);
     }, TIME_RESPONSE);
   });
 };
@@ -88,5 +101,6 @@ export {
   authenticationLogin,
   getUsersList,
   getUserById,
+  getPerfilList,
   checkPermission
 };

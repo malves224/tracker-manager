@@ -1,9 +1,10 @@
-import { TextField } from "@mui/material";
+/* eslint-disable no-unused-vars */
+import {  MenuItem, Select, TextField } from "@mui/material";
 import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
 import { AlertTogle } from "../components";
 import { useLocation } from "react-router-dom";
-import { checkPermission, getUserById } from "../mockRequests/mockAPI";
+import { checkPermission, getUserById, getPerfilList } from "../mockRequests/mockAPI";
 import EditUnicEntity from "../components/EditUnicEntity";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -29,10 +30,11 @@ const initialStateAlert = {
   value: "", severity:"warning", open: false
 };
 
-function UserInfo({perfilId}) {
+function UserInfo({perfilId, permissionsToCurrentPage}) {
   const [userInfo, setUserInfo] = useState(initialStateUser);
   const [validation, setValidation] = useState(initialStateValidation);
   const [isEditing, setEditing] = useState(false);
+  const [allPerfilAcess, setAllPerfilAcess ] = useState([]);
   const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const location = useLocation();
   const [,pageCurrent,idUser] = location.pathname.split("/");
@@ -40,23 +42,30 @@ function UserInfo({perfilId}) {
   const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
 
   const requestUser = async () => {
-    const response = await getUserById(idUser);
+    const response = await getUserById(parseInt(idUser));
     setUserInfo({
-      ...initialStateUser,
       ...response[0],
     });
     // trazer tbm do localStorage futuramente
   };
 
+  const thrownAlertNoPermission = () => setMessageAlert({
+    value: "Você não tem permissão para essa ação.",
+    severity: "error",
+    open: true,        
+  });
+
   useEffect(() => {
     requestUser();
+    getPerfilList().then((response) => setAllPerfilAcess(response));
+    // RESGATAR DADOS DO LOCALSTORAGE PARA TESTES
     return () => {
       setUserInfo(initialStateUser);
     };
   }, []);
 
   const handleChangeGeneric = ({target}) => {
-    const { id: name, value } = target;
+    const { name, value } = target;
     setUserInfo({
       ...userInfo,
       [name]: value,
@@ -82,38 +91,47 @@ function UserInfo({perfilId}) {
   };
 
   const handleClickExcluir = () => {
-    console.log("excluir usuario, mudando staatus no banco");
-  };
-
-  const handleClickSave = async () => {
-    // ordem de verificações
-    // 1 verificar os campos de imput 
-    // 2 verificar se tem permisão para tal ação no banck-end
-    try {
-      await checkPermission(perfilId, pageCurrent, "editing");// mudar para uma função que altere o dado no db
-      const isAllInputValid = validateData.checkAllInputs(validation);
-      isAllInputValid 
-        ? setMessageAlert({
-          value: "Usuario alterado com sucesso",
+    checkPermission(perfilId, pageCurrent, "delete")
+      .then(() => {
+        // efetivar alteração await funcaoQueAltera('novo dados');
+        setMessageAlert({
+          value: "Usuario excluido com sucesso",
           severity: "success",
           open: true,
-        })
-        : setMessageAlert({
-          value: "Por favor verifique os campos em vermelho",
-          severity: "error",
-          open: true,
-        });
-    } catch (error) {
-      const messageError = error.message;
-      console.log(messageError);
-    }
+        });      
+      })
+      .catch(() => thrownAlertNoPermission());
   };
 
+  const handleClickSave = () => {
+    const isAllInputValid = validateData.checkAllInputs(validation); // 1 verificar os campos de imput 
+    if (!isAllInputValid) {
+      setMessageAlert({
+        value: "Por favor verifique os campos em vermelho",
+        severity: "error",
+        open: true,
+      });    
+    } else {
+      checkPermission(perfilId, pageCurrent, "editing")
+        .then(() => {
+          // efetivar alteração await funcaoQueAltera('novo dados');
+          setMessageAlert({
+            value: "Usuario alterado com sucesso",
+            severity: "success",
+            open: true,
+          });
+        })
+        .catch(() => thrownAlertNoPermission());
+    }
+  }; 
+ 
   return (
     <EditUnicEntity
       tittle="Informações do usuario"
       setEditing={ handleClickEdit }
       isEditing={ isEditing }
+      permissionForEdit={ permissionsToCurrentPage.editing }
+      permissionForDelete={ permissionsToCurrentPage.delete }
       handleClickSave={ handleClickSave }
       handleClickExcluir={ handleClickExcluir }
       handleClickCancel={ handleClickCancel }
@@ -125,7 +143,7 @@ function UserInfo({perfilId}) {
         {messageAlert.value}
       </AlertTogle>
       <TextField
-        id="nome"
+        name="nome"
         disabled={ !isEditing }
         label="Nome"
         onChange={ handleChangeGeneric }
@@ -133,7 +151,7 @@ function UserInfo({perfilId}) {
         value={ userInfo.nome }
       />
       <TextField
-        id="cargo"
+        name="cargo"
         disabled={ !isEditing }
         label="Cargo"
         onChange={ handleChangeGeneric }
@@ -141,7 +159,7 @@ function UserInfo({perfilId}) {
         variant="standard"
       />
       <TextField
-        id="contato"
+        name="contato"
         error={ !validation.contato }
         inputProps={ {maxLength: "11"} }
         helperText={ !validation.contato && "Contato Invalido, Confira o contato" }
@@ -154,7 +172,7 @@ function UserInfo({perfilId}) {
         value={ userInfo.contato }
       />
       <TextField
-        id="email"
+        name="email"
         error={ !validation.email }
         helperText={ !validation.email && "Email Invalido." }
         onBlur={ handleBlurGeneric }
@@ -165,17 +183,21 @@ function UserInfo({perfilId}) {
         variant="standard"
         value={ userInfo.email }
       />
-      <TextField
+      <Select
         disabled={ !isEditing }
-        id="perfilAcesso"
-        label="Perfil de acesso"
         onChange={ handleChangeGeneric }
-        variant="standard"
+        label="Perfil de acesso"
         value={ userInfo.perfilAcesso }
-      />
+        variant="standard"
+        name="perfilAcesso"
+      >
+        {allPerfilAcess
+          .map((perfil) => (
+            <MenuItem  key={ perfil } value={ perfil }>{perfil}</MenuItem>))}
+      </Select>
       <TextField
         disabled={ !isEditing }
-        id="senha"
+        name="senha"
         label="Senha"
         error={ !validation.senha }
         helperText={ !validation.senha && "Insira ao menos 8 digitos" }
@@ -191,10 +213,17 @@ function UserInfo({perfilId}) {
 
 const mapStateToProps = (state) => ({
   perfilId: state.user.idPerfil,
+  permissionsToCurrentPage: state.user.perfilData.permissions
+    .find(({page}) => page === "UserInfo")
 });
 
 UserInfo.propTypes = {
-  perfilId: PropTypes.string.isRequired,
+  perfilId: PropTypes.number.isRequired,
+  permissionsToCurrentPage: PropTypes.shape({
+    page: PropTypes.string,
+    editing: PropTypes.bool,
+    delete: PropTypes.bool,
+  }),
 };
 
 export default connect(mapStateToProps)(UserInfo);

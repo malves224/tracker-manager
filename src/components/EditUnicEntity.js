@@ -17,7 +17,7 @@ const sxBox = {
   borderRadius: "5px",
   margin: "10px",
   padding: "10px 0",
-  width: "95%"
+  height: "650px"
 }; 
 
 const sxBoxForm = {
@@ -27,10 +27,9 @@ const sxBoxForm = {
   alignItems: "flex-left",
   border: "solid 1px gray",
   borderRadius: "5px",
-  margin: "10px",
   padding: "10px 10px",
   width: "90%",
-  height: "calc(60vh)"
+  height: "450px"
 };
 
 const sxBtnsEdit = {
@@ -42,7 +41,8 @@ const sxBtnsEdit = {
 
 
 function EditUnicEntity({children, tittle, setEditing, 
-  isEditing, handleClickExcluir, handleClickSave, handleClickCancel}) {
+  isEditing, handleClickExcluir, 
+  handleClickSave, handleClickCancel, permissionForEdit, permissionForDelete}) {
   const [openModal, setOpenModal] = useState(false);
   return (
     <PaperResponsive>
@@ -62,7 +62,7 @@ function EditUnicEntity({children, tittle, setEditing,
           <Box sx={ {padding: "5px 0"} }>
             <Typography
               variant="h1"
-              sx={ {fontSize: "26px", marginLeft: "10px"} }
+              sx={ {fontSize: "18px", marginLeft: "10px"} }
             >
               {tittle}
             </Typography>
@@ -72,6 +72,7 @@ function EditUnicEntity({children, tittle, setEditing,
           >
             <Button
               sx={ {minWidth: "44px"} }
+              disabled={ !permissionForEdit }
               onClick={ setEditing }
               size="small"
               variant="contained"
@@ -80,6 +81,7 @@ function EditUnicEntity({children, tittle, setEditing,
             </Button>
             <Button
               sx={ {minWidth: "44px"} }
+              disabled={ !permissionForDelete }
               onClick={ () => setOpenModal(true) }
               size="small"
               color="error"
@@ -115,6 +117,11 @@ function EditUnicEntity({children, tittle, setEditing,
   );
 }
 
+EditUnicEntity.defaultProps = {
+  permissionForEdit: true,
+  permissionForDelete: true
+};
+
 
 
 EditUnicEntity.propTypes = {
@@ -122,6 +129,8 @@ EditUnicEntity.propTypes = {
   tittle: PropTypes.string.isRequired,
   setEditing: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
+  permissionForEdit: PropTypes.bool,
+  permissionForDelete: PropTypes.bool,
   handleClickExcluir: PropTypes.func.isRequired,
   handleClickSave: PropTypes.func.isRequired,
   handleClickCancel: PropTypes.func.isRequired,

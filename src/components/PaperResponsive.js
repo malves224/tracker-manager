@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-keys */
 /* eslint-disable no-unused-vars */
 import React from "react";
 import PropTypes from "prop-types";
@@ -5,12 +6,12 @@ import { useMediaQuery } from "@mui/material";
 import { Paper } from "@mui/material";
 
 const sxMobile = {
-  height:"calc(100vh)",
+  minHeight: "100vh",
   paddingTop: "60px" 
 };
 
 const sxNoMobile = {
-  height:"calc(100vh)",
+  minHeight:"calc(100vh)",
   padding: "60px 0 0 240px" 
 };
 
