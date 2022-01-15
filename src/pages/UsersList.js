@@ -25,14 +25,13 @@ function UsersList() {
         return row[field].toLowerCase().includes(searchValueClean);
       });
     });
-    console.log(filteredRows);
     setRowsFiltred(filteredRows);
   };
 
   const requestUser = async () => {
     const response = await getUsersList();
     const userList = response.map(({id, login, fullName, perfil, status}) => ({
-      id,
+      id: id.toString(),
       login,
       nome: fullName,
       perfil,
@@ -49,7 +48,7 @@ function UsersList() {
         color="success"
         size="small"
         startIcon={ <AddCircleIcon /> }
-        onClick={ () => console.log("redirecionar para tela de add") }
+        onClick={ () => history.push("/NewUser") }
         sx={ {display: "flex", fontSize: "12px"} } 
         variant="contained"
       >

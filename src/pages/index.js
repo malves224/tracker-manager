@@ -12,6 +12,7 @@ import Financeiro from "./Financeiro";
 import Estoque from "./Estoque";
 import NotFound from "./NotFound";
 import UserInfo from "./UserInfo";
+import NewUser from "./NewUser";
 
 
 export {
@@ -28,5 +29,6 @@ export {
   Financeiro,
   Estoque,
   NotFound,
-  UserInfo
+  UserInfo,
+  NewUser
 };

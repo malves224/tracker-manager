@@ -150,6 +150,11 @@ const perfilPermissions = [
         "editing": true,
         "delete": true
       },
+      {
+        "page": "NewUser",
+        "editing": true,
+        "delete": true
+      },
     ]
   },
   {

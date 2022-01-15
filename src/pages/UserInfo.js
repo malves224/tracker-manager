@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {  MenuItem, Select, TextField } from "@mui/material";
 import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
@@ -16,7 +15,7 @@ const initialStateUser = {
   contato: "",
   email: "",
   perfilAcesso: "",
-  senha: ""
+  senha: "",
 };
 
 const initialStateValidation = {
@@ -44,6 +43,7 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
   const requestUser = async () => {
     const response = await getUserById(parseInt(idUser));
     setUserInfo({
+      ...initialStateUser,
       ...response[0],
     });
     // trazer tbm do localStorage futuramente
@@ -73,7 +73,7 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
   };
 
   const handleBlurGeneric = ({target}) => {
-    const { id: name, value } = target;
+    const { name, value } = target;
     setValidation({
       ...validation,
       [name]: validateData.check(name, value)
@@ -192,8 +192,12 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
         name="perfilAcesso"
       >
         {allPerfilAcess
-          .map((perfil) => (
-            <MenuItem  key={ perfil } value={ perfil }>{perfil}</MenuItem>))}
+          .map(({id, name}) => (
+            <MenuItem 
+              key={ id }
+              value={ name }
+            >{name}
+            </MenuItem>))}
       </Select>
       <TextField
         disabled={ !isEditing }

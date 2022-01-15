@@ -8,8 +8,8 @@ const checkCelular = (value) => { // formato 11956410136
   return regex.test(value);
 };
 
-const checkPassword = (value, minDigit) => {
-  const MIN_LENGTH = minDigit;
+const checkPassword = (value) => {
+  const MIN_LENGTH = 8;
   return value.length >= MIN_LENGTH;
 };
 

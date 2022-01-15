@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   itemsMenu,
   users,
@@ -30,7 +29,7 @@ const getUsersList = () => {
 const getPerfilList = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const allUser = perfilPermissions.map((perfil) => perfil.name);
+      const allUser = perfilPermissions.map(({name, id}) => ({name, id}));
       resolve(allUser);
     }, TIME_RESPONSE);
   });
