@@ -152,8 +152,7 @@ const perfilPermissions = [
       },
       {
         "page": "NewUser",
-        "editing": true,
-        "delete": true
+        "create": true,
       },
     ]
   },
