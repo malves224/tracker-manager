@@ -91,7 +91,7 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
   };
 
   const handleClickExcluir = () => {
-    checkPermission(perfilId, pageCurrent, "delete")
+    checkPermission(perfilId, pageCurrent, "delete") // provavelmente essa verificação sera feito no back
       .then(() => {
         // efetivar alteração await funcaoQueAltera('novo dados');
         setMessageAlert({

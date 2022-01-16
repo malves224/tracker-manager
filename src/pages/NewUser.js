@@ -1,11 +1,16 @@
-/* eslint-disable react/jsx-max-depth */
 /* eslint-disable no-unused-vars */
+/* eslint-disable max-lines */
 import { Box, Typography, 
-  TextField, Button, Select, MenuItem, InputLabel, FormControl} from "@mui/material";
+  TextField, Button, Select, MenuItem, InputLabel} from "@mui/material";
 import React, { useState, useEffect} from "react";
+import { validateData } from "../util/formValidate";
 import PaperResponsive from "../components/PaperResponsive";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { getPerfilList } from "../mockRequests/mockAPI";
+import { checkPermission, getPerfilList } from "../mockRequests/mockAPI";
+import { AlertTogle } from "../components";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const containerSx = {
   display: "flex",
@@ -38,7 +43,7 @@ const initialStateNewUser = {
 const initialStateValidate = {
   nome: {
     isValid: true,
-    message: ""
+    message: "Por favor insira um nome valido"
   },
   email: {
     isValid: true,
@@ -58,12 +63,21 @@ const initialStateValidate = {
   },
 };
 
+const initialStateAlert = {
+  value: "", severity:"warning", open: false
+};
 
-function NewUser() {
+function NewUser({perfilId}) {
   const [newUserData, setNewUserData ] = useState(initialStateNewUser);
-  const [validateData, setValidateData] = useState(initialStateValidate);
+  const [validate, setValidate] = useState(initialStateValidate);
+  const history = useHistory();
+  // eslint-disable-next-line no-unused-vars
   const [idPerfil, setIdPerfil] = useState(0);
+  const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const [allPerfilAcesso, setAllPerfilAcess] = useState([]);
+  const [,pageCurrent] = location.pathname.split("/");
+
+  const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
   
   useEffect(() => {
     getPerfilList().then((response) => setAllPerfilAcess(response));
@@ -74,26 +88,76 @@ function NewUser() {
 
   const handleChangeGeneric = ({target}) => {
     const { name, value } = target;
-    setValidateData({
+    setNewUserData({
       ...newUserData,
       [name]: value,
     });
   };
 
-  const handleBlurGeneric = ({target}) => {
+  const handleBlurGeneric = ({target}, message = undefined) => {
     const { name, value } = target;
-    setValidateData({
-      ...validateData,
+    setValidate({
+      ...validate,
       [name]: {
-        ...[name],
-        value: validateData.check(name, value),
+        ...validateData.checkWithMessage(name, value, message),
       }
     });
   };
 
-  const handleClickButton = () => {
-    // 1 verifica se todos inputs estão validos, se nao retornar menssagem
+  const handleClickItemSelect = (id) => {
+    setIdPerfil(id);
+    setValidate({
+      ...validate,
+      perfilAcesso: {
+        isValid: true,
+        message: "",
+      }
+    });
+  };
 
+  const thrownAlertNoPermission = () => setMessageAlert({
+    value: "Você não tem permissão para essa ação.",
+    severity: "error",
+    open: true,        
+  });
+
+  const handleClickButton = () => {
+    // 1 verifica se o campo perfil esta prenchido
+    setValidate({
+      ...validate,
+      perfilAcesso: {
+        ...validateData
+          .checkWithMessage("perfilAcesso", 
+            newUserData.perfilAcesso, "Campo obrigatório.")
+      }
+    });
+    // 2 verifica se todos campos estão validos
+    const allInputsIsValid = validateData.checkAllInputs({
+      nome: validate.nome.isValid,
+      email: validate.email.isValid,
+      contato: validate.contato.isValid,
+      perfilAcesso: validate.perfilAcesso.isValid,
+      senha: validate.senha.isValid,
+    });
+    if (!allInputsIsValid) {
+      setMessageAlert({
+        value: "Por favor verifique os campos em vermelho",
+        severity: "error",
+        open: true,
+      });    
+    } else {
+      checkPermission(perfilId, pageCurrent, "create") // provavelmente essa verificação sera feito no back
+        .then(() => {
+          // efetivar alteração await funcaoQueAltera('novo dados');
+          setMessageAlert({
+            value: "Usuario criado com sucesso",
+            severity: "success",
+            open: true,
+          });
+          setNewUserData(initialStateNewUser);
+        })
+        .catch(() => thrownAlertNoPermission());
+    }
   };
   
   return (
@@ -101,6 +165,12 @@ function NewUser() {
       sx={ { display: "flex", 
         justifyContent: "center"} }
     >
+      <AlertTogle
+        severity={ messageAlert.severity }
+        switchValue={ [messageAlert.open, toogleAlert] }
+      >
+        {messageAlert.value}
+      </AlertTogle>
       <Box sx={ containerSx }>
         <AccountCircleIcon sx={ {fontSize: "60px"} } />
         <Typography sx={ { fontSize: "28px" } }variant="h1">
@@ -110,8 +180,8 @@ function NewUser() {
           sx={ containerForms }
         >
           <TextField
-            error={ !validateData.nome.isValid }
-            helperText={ !validateData.nome.message }
+            error={ !validate.nome.isValid }
+            helperText={ !validate.nome.isValid && validate.nome.message }
             onChange={ handleChangeGeneric }
             onBlur={ handleBlurGeneric }
             value={ newUserData.nome }
@@ -121,6 +191,9 @@ function NewUser() {
             size="small"
           />
           <TextField
+            error={ !validate.email.isValid }
+            helperText={ !validate.email.isValid && validate.email.message }
+            onBlur={ handleBlurGeneric }
             onChange={ handleChangeGeneric }
             value={ newUserData.email }
             name="email"
@@ -129,6 +202,9 @@ function NewUser() {
             size="small"
           />
           <TextField
+            error={ !validate.contato.isValid }
+            helperText={ !validate.contato.isValid && validate.contato.message }
+            onBlur={ handleBlurGeneric }          
             onChange={ handleChangeGeneric }
             value={ newUserData.contato }
             name="contato"
@@ -137,8 +213,18 @@ function NewUser() {
             variant="standard"
             size="small"
           />
-          <InputLabel id="perfil-label">Perfil de acesso:</InputLabel>
+          <InputLabel 
+            id="perfil-label"
+          >Perfil de acesso: *
+            {
+              !validate.perfilAcesso.isValid &&
+                <span style={ {color: "#f44336", fontSize: "12px"} }>
+                  {` ${validate.perfilAcesso.message}`}
+                </span>
+            }
+          </InputLabel>
           <Select
+            error={ !validate.perfilAcesso.isValid }
             onChange={ handleChangeGeneric }
             labelId="perfil-label"
             name="perfilAcesso"
@@ -154,13 +240,18 @@ function NewUser() {
             {allPerfilAcesso
               .map(({id, name}) => (
                 <MenuItem
-                  onClick={ () => setIdPerfil(id) }
+                  onClick={ () => handleClickItemSelect(id) }
                   key={ id }
                   value={ name }
                 >{name}
                 </MenuItem>))}
           </Select>
           <TextField
+            error={ !validate.senha.isValid }
+            helperText={ !validate.senha.isValid && validate.senha.message }
+            onBlur={ 
+              (ev) => handleBlurGeneric(ev, "Insira uma senha com pelo menos 8 digitos.") 
+            }                    
             onChange={ handleChangeGeneric }
             value={ newUserData.senha }
             name="senha"
@@ -182,4 +273,17 @@ function NewUser() {
   );
 }
 
-export default NewUser;
+const mapStateToProps = (state) => ({
+  perfilId: state.user.idPerfil,
+});
+
+NewUser.propTypes = {
+  perfilId: PropTypes.number.isRequired,
+  permissionsToCurrentPage: PropTypes.shape({
+    page: PropTypes.string,
+    editing: PropTypes.bool,
+    delete: PropTypes.bool,
+  }),
+};
+
+export default connect(mapStateToProps)(NewUser);

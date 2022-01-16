@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 const checkEmail = (value) => {
   const regex = new RegExp(/^([\w-]+\.)*[\w\- ]+@([\w\- ]+\.)+([\w-]{2,3})$/); // fonte dessa expresão https://www.devmedia.com.br/iniciando-expressoes-regulares/6557
   return regex.test(value);
@@ -30,8 +29,12 @@ const validateData = {
   contato: checkCelular,
   senha: checkPassword,
   nome: checkName,
-  checkBeEmpty,
+  perfilAcesso: checkBeEmpty,
   check: (type, value) => validateData[type](value),
+  checkWithMessage: (type, value, message = `Insira um ${type} valido.`) => ({
+    isValid: validateData[type](value),
+    message: !validateData[type](value) ? message : ""
+  }),
   checkAllInputs: (dataValidation) => {
     const keysData = Object.keys(dataValidation);
     return keysData.every((key) => dataValidation[key]);
