@@ -81,8 +81,8 @@ const editUserById = (id, objUserUpdate) => {
         reject(new Error ({message: "id ou dados vazio"}));
       } else {
         const usersLocalStorage = storage.get("users");
-        const otherUsers = usersLocalStorage.filter((user) => user.id !== id);
-        const userById = usersLocalStorage.find((user) => user.id === id);
+        const otherUsers = usersLocalStorage.filter((user) => user.id !== +id);
+        const userById = usersLocalStorage.find((user) => user.id === +id);
         const userUpdate = {
           ...userById,
           fullName: objUserUpdate.nome,

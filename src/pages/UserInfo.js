@@ -1,7 +1,6 @@
 import {  MenuItem, Select, TextField } from "@mui/material";
 import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
-import { AlertTogle } from "../components";
 import { useLocation } from "react-router-dom";
 import { checkPermission, getUserById, 
   getPerfilList, editUserById, deleteUser } from "../mockRequests/mockAPI";
@@ -9,6 +8,7 @@ import EditUnicEntity from "../components/EditUnicEntity";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { throwAlert } from "../actions";
 
 const initialStateUser = {
   nome: "",
@@ -26,22 +26,16 @@ const initialStateValidation = {
   senha: true
 };
 
-const initialStateAlert = {
-  value: "", severity:"warning", open: false
-};
-
-function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
+function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
   const [userInfo, setUserInfo] = useState(initialStateUser);
   const [idPerfil, setIdPerfil] = useState(0);
   const [validation, setValidation] = useState(initialStateValidation);
   const [isEditing, setEditing] = useState(false);
   const [allPerfilAcess, setAllPerfilAcess ] = useState([]);
-  const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const location = useLocation();
   const [,pageCurrent,idUser] = location.pathname.split("/");
   const history = useHistory();
 
-  const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
 
   const requestUser = async () => {
     const response = await getUserById(parseInt(idUser)); // essa função traz os dados do localStorage
@@ -56,7 +50,7 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
     setIdPerfil(response.idPerfil);
   };
 
-  const thrownAlertNoPermission = () => setMessageAlert({
+  const thrownAlertNoPermission = () => setAlert({
     value: "Você não tem permissão para essa ação.",
     severity: "error",
     open: true,        
@@ -101,11 +95,7 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
       perfilIdUserLogado, pageCurrent, "delete"); // provavelmente essa verificação sera feito no back
     if (hasPermission) {
       const response = await deleteUser(idUser);
-      setMessageAlert({
-        value: response.message,
-        severity: "success",
-        open: true,
-      });
+      setAlert({ value: response.message, severity: "success", open: true});
       history.push("/UsersControl");
     } else {
       thrownAlertNoPermission();
@@ -115,23 +105,20 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
   const handleClickSave = async () => {
     const isAllInputValid = validateData.checkAllInputs(validation); // 1 verificar os campos de imput 
     if (!isAllInputValid) {
-      setMessageAlert({
-        value: "Por favor verifique os campos em vermelho",
-        severity: "error",
-        open: true,
-      });    
+      setAlert({value: "Por favor verifique os campos em vermelho", severity: "error", 
+        open: true});    
     } else {
-      const hasPermission = await checkPermission(idUser, pageCurrent, "editing");
+      const hasPermission = await 
+      checkPermission(perfilIdUserLogado, pageCurrent, "editing");
       if (hasPermission) {
         try {
-          await editUserById(perfilIdUserLogado, {...userInfo, idPerfil: idPerfil});
-          setMessageAlert({
-            value: "Usuario alterado com sucesso",
-            severity: "success",
+          await editUserById(idUser, {...userInfo, idPerfil: idPerfil});
+          setAlert({value: "Usuario alterado com sucesso", severity: "success",
             open: true,
           });
+          setEditing(false);
         } catch (error) {
-          setMessageAlert({
+          setAlert({
             value: error.message,
             severity: "error",
             open: true,
@@ -154,12 +141,6 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
       handleClickExcluir={ handleClickExcluir }
       handleClickCancel={ handleClickCancel }
     >
-      <AlertTogle
-        severity={ messageAlert.severity }
-        switchValue={ [messageAlert.open, toogleAlert] }
-      >
-        {messageAlert.value}
-      </AlertTogle>
       <TextField
         name="nome"
         disabled={ !isEditing }
@@ -238,6 +219,10 @@ const mapStateToProps = (state) => ({
   permissionsToCurrentPage: state.user.perfilData.permissions
     .find(({page}) => page === "UserInfo")
 });
+
+const mapDispatchToProps = (dispatch) => ({
+  setAlert: (payload) => dispatch(throwAlert(payload)),
+});
 UserInfo.propTypes = {
   perfilIdUserLogado: PropTypes.number.isRequired,
   permissionsToCurrentPage: PropTypes.shape({
@@ -245,6 +230,7 @@ UserInfo.propTypes = {
     editing: PropTypes.bool,
     delete: PropTypes.bool,
   }),
+  setAlert: PropTypes.func,
 };
 
-export default connect(mapStateToProps)(UserInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
