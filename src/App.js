@@ -20,7 +20,8 @@ import { Login,
 import { 
   createLocalUsers, createLocalPerfilPerm } from "./mockRequests/mockCreateDbStorage";
 import "./App.css";
-import  { ResponsiveDrawer }  from "./components";
+import  { AlertTogle, ResponsiveDrawer }  from "./components";
+import { throwAlert } from "./actions";
 
 const darkTheme = createTheme({
   palette: {
@@ -34,7 +35,8 @@ const lightTheme = createTheme({
   },
 });
 
-function App({token, themeMode}) {
+function App({token, themeMode,alertOpen, messageAlert, 
+  severityAlert, setAlert}) {
   const [userHasToken, setUserToken ] = React.useState(null);
 
   React.useEffect(() => {
@@ -47,6 +49,12 @@ function App({token, themeMode}) {
     <ThemeProvider theme={ themeMode === "dark" ? darkTheme : lightTheme }>
       {userHasToken&&
         <ResponsiveDrawer />}
+      <AlertTogle
+        severity={ severityAlert }
+        switchValue={ [alertOpen, setAlert] }
+      >
+        {messageAlert}
+      </AlertTogle>
       <Switch>
         <Route
           exact
@@ -116,6 +124,13 @@ function App({token, themeMode}) {
 const mapStateToProps = (state) => ({
   token: state.user.token,
   themeMode: state.user.config.mode,
+  alertOpen: state.alertGlobal.open,
+  messageAlert: state.alertGlobal.value,
+  severityAlert: state.alertGlobal.severity,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setAlert: (payload) => dispatch(throwAlert(payload)),
 });
 
 App.propTypes = {
@@ -124,6 +139,10 @@ App.propTypes = {
     PropTypes.string,
   ]),
   themeMode: PropTypes.string,
+  alertOpen: PropTypes.bool,
+  messageAlert: PropTypes.string,
+  severityAlert: PropTypes.string,
+  setAlert: PropTypes.func,
 };
 
-export default  connect(mapStateToProps)(App);
+export default  connect(mapStateToProps, mapDispatchToProps)(App);

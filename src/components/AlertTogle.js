@@ -4,11 +4,12 @@ import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 
+
 const AlertTogle = ({severity, children, switchValue}) => {
   const [alertOpen, setAlertOpen] = switchValue;
   const TIME_FOR_CLOSE_ALERT = 3000;
 
-  alertOpen && setTimeout(() => setAlertOpen(false), TIME_FOR_CLOSE_ALERT);
+  alertOpen && setTimeout(() => setAlertOpen({open: false}), TIME_FOR_CLOSE_ALERT);
 
   return (
     <Collapse
@@ -24,7 +25,7 @@ const AlertTogle = ({severity, children, switchValue}) => {
             aria-label="close"
             size="medium"
             onClick={ () => {
-              setAlertOpen(false);
+              setAlertOpen({open: false});
             } }
           >
             <CloseIcon fontSize="inherit" />
