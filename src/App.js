@@ -17,6 +17,8 @@ import { Login,
   UserInfo,
   ListVehicles,
   NewUser} from "./pages";
+import { 
+  createLocalUsers, createLocalPerfilPerm } from "./mockRequests/mockCreateDbStorage";
 import "./App.css";
 import  { ResponsiveDrawer }  from "./components";
 
@@ -37,6 +39,8 @@ function App({token, themeMode}) {
 
   React.useEffect(() => {
     setUserToken(token !== null);
+    createLocalUsers();
+    createLocalPerfilPerm();
   }, [token]);
 
   return (

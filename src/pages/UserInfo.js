@@ -3,11 +3,12 @@ import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
 import { AlertTogle } from "../components";
 import { useLocation } from "react-router-dom";
-import { checkPermission, getUserById, getPerfilList } from "../mockRequests/mockAPI";
+import { checkPermission, getUserById, 
+  getPerfilList, editUserById, deleteUser } from "../mockRequests/mockAPI";
 import EditUnicEntity from "../components/EditUnicEntity";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const initialStateUser = {
   nome: "",
@@ -29,24 +30,30 @@ const initialStateAlert = {
   value: "", severity:"warning", open: false
 };
 
-function UserInfo({perfilId, permissionsToCurrentPage}) {
+function UserInfo({perfilIdUserLogado, permissionsToCurrentPage}) {
   const [userInfo, setUserInfo] = useState(initialStateUser);
+  const [idPerfil, setIdPerfil] = useState(0);
   const [validation, setValidation] = useState(initialStateValidation);
   const [isEditing, setEditing] = useState(false);
   const [allPerfilAcess, setAllPerfilAcess ] = useState([]);
   const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const location = useLocation();
   const [,pageCurrent,idUser] = location.pathname.split("/");
+  const history = useHistory();
 
   const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
 
   const requestUser = async () => {
-    const response = await getUserById(parseInt(idUser));
+    const response = await getUserById(parseInt(idUser)); // essa função traz os dados do localStorage
     setUserInfo({
       ...initialStateUser,
-      ...response[0],
+      nome: response.nome,
+      cargo: response.cargo,
+      contato: response.contato,
+      email: response.email,
+      perfilAcesso: response.perfilAcesso
     });
-    // trazer tbm do localStorage futuramente
+    setIdPerfil(response.idPerfil);
   };
 
   const thrownAlertNoPermission = () => setMessageAlert({
@@ -58,7 +65,6 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
   useEffect(() => {
     requestUser();
     getPerfilList().then((response) => setAllPerfilAcess(response));
-    // RESGATAR DADOS DO LOCALSTORAGE PARA TESTES
     return () => {
       setUserInfo(initialStateUser);
     };
@@ -90,20 +96,23 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
     setEditing(true);
   };
 
-  const handleClickExcluir = () => {
-    checkPermission(perfilId, pageCurrent, "delete") // provavelmente essa verificação sera feito no back
-      .then(() => {
-        // efetivar alteração await funcaoQueAltera('novo dados');
-        setMessageAlert({
-          value: "Usuario excluido com sucesso",
-          severity: "success",
-          open: true,
-        });      
-      })
-      .catch(() => thrownAlertNoPermission());
+  const handleClickExcluir = async () => {
+    const hasPermission = await checkPermission(
+      perfilIdUserLogado, pageCurrent, "delete"); // provavelmente essa verificação sera feito no back
+    if (hasPermission) {
+      const response = await deleteUser(idUser);
+      setMessageAlert({
+        value: response.message,
+        severity: "success",
+        open: true,
+      });
+      history.push("/UsersControl");
+    } else {
+      thrownAlertNoPermission();
+    }  
   };
 
-  const handleClickSave = () => {
+  const handleClickSave = async () => {
     const isAllInputValid = validateData.checkAllInputs(validation); // 1 verificar os campos de imput 
     if (!isAllInputValid) {
       setMessageAlert({
@@ -112,16 +121,25 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
         open: true,
       });    
     } else {
-      checkPermission(perfilId, pageCurrent, "editing")
-        .then(() => {
-          // efetivar alteração await funcaoQueAltera('novo dados');
+      const hasPermission = await checkPermission(idUser, pageCurrent, "editing");
+      if (hasPermission) {
+        try {
+          await editUserById(perfilIdUserLogado, {...userInfo, idPerfil: idPerfil});
           setMessageAlert({
             value: "Usuario alterado com sucesso",
             severity: "success",
             open: true,
           });
-        })
-        .catch(() => thrownAlertNoPermission());
+        } catch (error) {
+          setMessageAlert({
+            value: error.message,
+            severity: "error",
+            open: true,
+          });
+        }
+      } else {
+        thrownAlertNoPermission();
+      }
     }
   }; 
  
@@ -193,7 +211,8 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
       >
         {allPerfilAcess
           .map(({id, name}) => (
-            <MenuItem 
+            <MenuItem
+              onClick={ () => setIdPerfil(id) }
               key={ id }
               value={ name }
             >{name}
@@ -214,15 +233,13 @@ function UserInfo({perfilId, permissionsToCurrentPage}) {
     </EditUnicEntity>
   );
 }
-
 const mapStateToProps = (state) => ({
-  perfilId: state.user.idPerfil,
+  perfilIdUserLogado: state.user.idPerfil,
   permissionsToCurrentPage: state.user.perfilData.permissions
     .find(({page}) => page === "UserInfo")
 });
-
 UserInfo.propTypes = {
-  perfilId: PropTypes.number.isRequired,
+  perfilIdUserLogado: PropTypes.number.isRequired,
   permissionsToCurrentPage: PropTypes.shape({
     page: PropTypes.string,
     editing: PropTypes.bool,

@@ -3,6 +3,7 @@ import {
   users,
   perfilPermissions
 } from "./mockDatas";
+import storage from "../util/storage/store";
 
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
 // nao é desenvolvido.
@@ -21,7 +22,8 @@ const getItemsNav = () => {
 const getUsersList = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(users);
+      const usersLocalStorage = storage.get("users");
+      resolve(usersLocalStorage);
     }, TIME_RESPONSE);
   });
 };
@@ -29,7 +31,8 @@ const getUsersList = () => {
 const getPerfilList = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const allUser = perfilPermissions.map(({name, id}) => ({name, id}));
+      const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
+      const allUser = perfilPermissionsLocalStorage.map(({name, id}) => ({name, id}));
       resolve(allUser);
     }, TIME_RESPONSE);
   });
@@ -54,16 +57,57 @@ const checkPermission = (idPerfil, pageForCheck, tipoPerm) => {
 const getUserById = (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const user = users.filter((user) => user.id === id)[0];
+      const usersLocalStorage = storage.get("users");
+      const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
+      const user = usersLocalStorage.filter((user) => user.id === id)[0];
       const userForReturn = {
         nome: user.fullName,
         cargo: user.cargo,
         contato: user.contato,
         email: user.login,
-        perfilAcesso: perfilPermissions
+        idPerfil: user.idPerfil,
+        perfilAcesso: perfilPermissionsLocalStorage
           .filter((perfil) => user.idPerfil === perfil.id)[0].name // simulaçao de innerJOin
       };
-      resolve([userForReturn]);
+      resolve(userForReturn);
+    }, TIME_RESPONSE);
+  });
+};
+
+const editUserById = (id, objUserUpdate) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!id || !objUserUpdate){
+        reject(new Error ({message: "id ou dados vazio"}));
+      } else {
+        const usersLocalStorage = storage.get("users");
+        const otherUsers = usersLocalStorage.filter((user) => user.id !== id);
+        const userById = usersLocalStorage.find((user) => user.id === id);
+        const userUpdate = {
+          ...userById,
+          fullName: objUserUpdate.nome,
+          idPerfil: !objUserUpdate.idPerfil ? userById.idPerfil : objUserUpdate.idPerfil,
+          cargo: objUserUpdate.cargo,
+          contato: objUserUpdate.contato,
+          login: objUserUpdate.email,
+          password: !objUserUpdate.senha ? userById.password : objUserUpdate.senha,
+        };
+        const newListUser = [...otherUsers, userUpdate];
+        storage.set("users", newListUser);
+        resolve(objUserUpdate);
+      }
+    }, TIME_RESPONSE);
+  });
+};
+
+const deleteUser = (id) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      const otherUsers = usersLocalStorage.filter((user) => user.id !== +id);
+      const userDeleted = usersLocalStorage.find((user) => user.id === +id);
+      storage.set("users",otherUsers);
+      resolve({message: `Usuario ${userDeleted.fullName} deletado com sucesso`});
     }, TIME_RESPONSE);
   });
 };
@@ -102,5 +146,7 @@ export {
   getUsersList,
   getUserById,
   getPerfilList,
-  checkPermission
+  checkPermission,
+  editUserById,
+  deleteUser
 };

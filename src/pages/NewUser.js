@@ -71,7 +71,6 @@ function NewUser({perfilId}) {
   const [newUserData, setNewUserData ] = useState(initialStateNewUser);
   const [validate, setValidate] = useState(initialStateValidate);
   const history = useHistory();
-  // eslint-disable-next-line no-unused-vars
   const [idPerfil, setIdPerfil] = useState(0);
   const [messageAlert, setMessageAlert] = useState(initialStateAlert);
   const [allPerfilAcesso, setAllPerfilAcess] = useState([]);
