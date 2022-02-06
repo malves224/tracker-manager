@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-lines */
 import { Box, Typography, 
-  TextField, Button, Select, MenuItem, InputLabel} from "@mui/material";
+  TextField, Button, Select, MenuItem, InputLabel, FormHelperText} from "@mui/material";
 import React, { useState, useEffect} from "react";
 import { validateData } from "../util/formValidate";
 import PaperResponsive from "../components/PaperResponsive";
@@ -11,6 +11,8 @@ import { AlertTogle } from "../components";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { throwAlert } from "../actions";
+
 
 const containerSx = {
   display: "flex",
@@ -43,23 +45,18 @@ const initialStateNewUser = {
 const initialStateValidate = {
   nome: {
     isValid: true,
-    message: "Por favor insira um nome valido"
   },
   email: {
     isValid: true,
-    message: ""
   },
   contato: {
     isValid: true,
-    message: ""
   },
   perfilAcesso: {
     isValid: true,
-    message: ""
   },
   senha: {
     isValid: true,
-    message: ""
   },
 };
 
@@ -67,7 +64,7 @@ const initialStateAlert = {
   value: "", severity:"warning", open: false
 };
 
-function NewUser({perfilId}) {
+function NewUser({perfilId, setAlert}) {
   const [newUserData, setNewUserData ] = useState(initialStateNewUser);
   const [validate, setValidate] = useState(initialStateValidate);
   const history = useHistory();
@@ -76,7 +73,7 @@ function NewUser({perfilId}) {
   const [allPerfilAcesso, setAllPerfilAcess] = useState([]);
   const [,pageCurrent] = location.pathname.split("/");
 
-  const toogleAlert = (valueBool) => setMessageAlert({...messageAlert, open:valueBool});
+  const toogleAlert = (valueBool) => setAlert({...messageAlert, open:valueBool});
   
   useEffect(() => {
     getPerfilList().then((response) => setAllPerfilAcess(response));
@@ -114,7 +111,7 @@ function NewUser({perfilId}) {
     });
   };
 
-  const thrownAlertNoPermission = () => setMessageAlert({
+  const thrownAlertNoPermission = () => setAlert({
     value: "Você não tem permissão para essa ação.",
     severity: "error",
     open: true,        
@@ -139,7 +136,7 @@ function NewUser({perfilId}) {
       senha: validate.senha.isValid,
     });
     if (!allInputsIsValid) {
-      setMessageAlert({
+      setAlert({
         value: "Por favor verifique os campos em vermelho",
         severity: "error",
         open: true,
@@ -148,7 +145,7 @@ function NewUser({perfilId}) {
       checkPermission(perfilId, pageCurrent, "create") // provavelmente essa verificação sera feito no back
         .then(() => {
           // efetivar alteração await funcaoQueAltera('novo dados');
-          setMessageAlert({
+          setAlert({
             value: "Usuario criado com sucesso",
             severity: "success",
             open: true,
@@ -185,7 +182,7 @@ function NewUser({perfilId}) {
             onBlur={ handleBlurGeneric }
             value={ newUserData.nome }
             name="nome"
-            label="Nome"
+            label="Nome *"
             variant="standard"
             size="small"
           />
@@ -197,7 +194,7 @@ function NewUser({perfilId}) {
             value={ newUserData.email }
             name="email"
             variant="standard"
-            label="Email"
+            label="Email *"
             size="small"
           />
           <TextField
@@ -208,19 +205,13 @@ function NewUser({perfilId}) {
             value={ newUserData.contato }
             name="contato"
             inputProps={ {maxLength: "11"} }
-            label="Telefone celular"
+            label="Telefone celular *"
             variant="standard"
             size="small"
           />
           <InputLabel 
             id="perfil-label"
           >Perfil de acesso: *
-            {
-              !validate.perfilAcesso.isValid &&
-                <span style={ {color: "#f44336", fontSize: "12px"} }>
-                  {` ${validate.perfilAcesso.message}`}
-                </span>
-            }
           </InputLabel>
           <Select
             error={ !validate.perfilAcesso.isValid }
@@ -254,7 +245,7 @@ function NewUser({perfilId}) {
             onChange={ handleChangeGeneric }
             value={ newUserData.senha }
             name="senha"
-            label="Senha"
+            label="Senha *"
             type="password"
             variant="standard"
             size="small"
@@ -276,6 +267,10 @@ const mapStateToProps = (state) => ({
   perfilId: state.user.idPerfil,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  setAlert: (payload) => dispatch(throwAlert(payload)),
+});
+
 NewUser.propTypes = {
   perfilId: PropTypes.number.isRequired,
   permissionsToCurrentPage: PropTypes.shape({
@@ -283,6 +278,7 @@ NewUser.propTypes = {
     editing: PropTypes.bool,
     delete: PropTypes.bool,
   }),
+  setAlert: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(NewUser);
+export default connect(mapStateToProps, mapDispatchToProps)(NewUser);

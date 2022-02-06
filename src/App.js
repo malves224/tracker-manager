@@ -22,6 +22,7 @@ import {
 import "./App.css";
 import  { AlertTogle, ResponsiveDrawer }  from "./components";
 import { throwAlert } from "./actions";
+import FormNewUser from "./components/forms/FormNewUser";
 
 const darkTheme = createTheme({
   palette: {
@@ -110,11 +111,14 @@ function App({token, themeMode,alertOpen, messageAlert,
         />
         <Route path="/Estoque" render={ () => <RequireAuth><Estoque /></RequireAuth> } />
         <Route
+          path="/sandbox"
+          render={ () => <FormNewUser /> }
+        />
+        <Route
           path="*"
           render={ () =>
             <h1 id="notfound">Not found</h1> }
         />
-
       </Switch>
     </ThemeProvider>
 
