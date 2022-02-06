@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button, FormHelperText, InputLabel, 
+import { Box, Button, InputLabel, 
   MenuItem, Select, TextField } from "@mui/material";
 import { getPerfilList } from "../../mockRequests/mockAPI"; // MOCK REQUEST
 import React, { useEffect, useState } from "react";
@@ -67,23 +67,16 @@ function FormNewUser() {
     console.log(newUserData);
   }; 
 
-  const { 
-    nome: nameIsValid, 
-    email: emailIsvalid,
-    contato: contatoIsValid,
-    perfilAcesso: perfilAcessoIsValid,
-    senha: senhaIsValid,
-  } = userDataIsValid;
+  const handleOnBlurSenha = () => {
+    newUserData.perfilAcesso === undefined 
+      && setNewUserData({
+        ...newUserData,
+        perfilAcesso: ""
+      });
+  };
 
   const verifyValidationData = (type) => 
     newUserData[type] === undefined ? false : !userDataIsValid[type];
-
-  const getHelperText = (type, message) => {
-    const output =  newUserData[type] !== undefined
-    && !nameIsValid && message;
-    console.log(newUserData[type] !== undefined);
-    return output;
-  };
 
   return (
     <Box
@@ -155,9 +148,10 @@ function FormNewUser() {
       }
       <TextField
         error={ verifyValidationData("senha") }
-        helperText={ verifyValidationData("contato") 
+        helperText={ verifyValidationData("senha") 
           && "Insira uma senha com ao menos 8 digitos" }
         onChange={ handleChangeGeneric }
+        onBlur={ handleOnBlurSenha }
         value={ newUserData.senha }
         name="senha"
         label="Senha *"
@@ -166,6 +160,7 @@ function FormNewUser() {
         size="small"
       />
       <Button
+        disabled={ !validateData.checkAllInputs(userDataIsValid) }
         onClick={ handleClickButton }
         color="success"
         variant="contained"
