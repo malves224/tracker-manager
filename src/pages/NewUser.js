@@ -182,7 +182,7 @@ function NewUser({perfilId, setAlert}) {
             onBlur={ handleBlurGeneric }
             value={ newUserData.nome }
             name="nome"
-            label="Nome *"
+            label="Nome completo *"
             variant="standard"
             size="small"
           />

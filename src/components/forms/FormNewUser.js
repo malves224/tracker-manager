@@ -84,17 +84,19 @@ function FormNewUser() {
     >
       <TextField
         error={ verifyValidationData("nome") }
-        helperText={ verifyValidationData("nome") && "Insira um nome valido" }
+        helperText={ verifyValidationData("nome") && "Insira o nome completo" }
         onChange={ handleChangeGeneric }
         value={ newUserData.nome }
         name="nome"
-        label="Nome *"
+        label="Nome completo *"
         variant="standard"
         size="small"
       />
       <TextField
         error={ verifyValidationData("email") }
-        helperText={ verifyValidationData("email") && "Insira um email valido" }
+        helperText={ 
+          verifyValidationData("email") && "Insira um email valido ex: lucas@gmail.com" 
+        }
         onChange={ handleChangeGeneric }
         value={ newUserData.email }
         name="email"
@@ -104,7 +106,9 @@ function FormNewUser() {
       />
       <TextField
         error={ verifyValidationData("contato") }
-        helperText={ verifyValidationData("contato") && "Insira um contato valido" }
+        helperText={ 
+          verifyValidationData("contato") && "Insira um contato valido ex: 11921497099" 
+        }
         onChange={ handleChangeGeneric }
         value={ newUserData.contato }
         name="contato"
@@ -142,7 +146,7 @@ function FormNewUser() {
       </Select>
       {
         verifyValidationData("perfilAcesso") &&
-          <span style={ {color: "red"} }>
+          <span style={ {color: "#d32f2f", fontSize:"14px"} }>
             Insira um perfil de acesso
           </span>
       }
