@@ -51,8 +51,18 @@ function FormNewUser() {
     });
   };
 
+  const updatePerfilList = async () => {
+    try {
+      const perfilList = await getPerfilList();
+      setAllPerfilAcess(perfilList);
+    } catch (error) {
+      console.log(error.message);
+      // implementar setAlertGlobal com a message
+    }
+  };
+
   useEffect(() => {
-    getPerfilList().then((response) => setAllPerfilAcess(response));
+    updatePerfilList();
     return () => {
       setAllPerfilAcess([]);
     };
@@ -138,9 +148,9 @@ function FormNewUser() {
         {allPerfilAcesso
           .map(({id, name}) => (
             <MenuItem
+              value={ name }
               onClick={ () => handleClickItemSelect(id) }
               key={ id }
-              value={ name }
             >{name}
             </MenuItem>))}
       </Select>
