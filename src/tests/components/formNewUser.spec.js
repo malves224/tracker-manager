@@ -1,11 +1,16 @@
 import React from "react";
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as Apifuncs from "../../mockRequests/mockAPI";
-import App from "../../App";
+import { getPerfilList } from "../../mockRequests/mockAPI";
 import FormNewUser from "../../components/forms/FormNewUser";
+import { act } from "react-dom/test-utils";
 
-// é nescesarrio mockar as requisições
+jest.mock('../../mockRequests/mockAPI');
+
+const mockUser = [
+  {id: 1, name: "admin"}, 
+  {id: 2, name: "vendedor"}
+]
 
 describe('Ao renderizar o "FormNewUser"', () => {
   test('O botão deve estar desabilitado', () => {
@@ -89,36 +94,39 @@ describe('Ao digitar a senha sem preencher o campo de perfil de acesso', () => {
   
 })
 
-// describe.only(`Ao preencher nome, Email, Telefone, Perfil de 
-//  acesso e Senha validos,`, () => {
-//    const dadosValidosUsuario = {
-//      nome: 'ana carolina',
-//      email: 'ana@yahoo.com',
-//      telefone: '11912349876',
-//      perfil: 'vendedor',
-//      senha: '12345678'
-//    }
-//    test(`O botão "cadastrar" deve estar habilitado, 
-//      somente se todos campos estiver preenchido corretamente`, () => {
-//        render(<FormNewUser />);
-//        const nomeInput = screen.getByLabelText(/nome/i);
-//        const emailInput = screen.getByLabelText(/email/i);
-//        const contatoInput = screen.getByLabelText(/telefone celular/i);
-//        const perfilSelect = screen.getByLabelText(/perfil de acesso/i);
-//        const senhaInput = screen.getByLabelText(/senha/i); 
-//        const button = screen.getByRole('button', {name: /cadastrar/i });
+describe(`Ao preencher nome, Email, Telefone, Perfil de 
+  acesso e Senha validos,`,() => {
+    
+  const dadosValidosUsuario = {
+    nome: 'ana carolina',
+    email: 'ana@yahoo.com',
+    telefone: '11912349876',
+    perfil: 'vendedor',
+    senha: '12345678'
+  }
 
+  beforeEach(async () => {
+    await getPerfilList.mockImplementation(() => mockUser);
+  });
 
-//        userEvent.type(nomeInput, dadosValidosUsuario.nome);
-//        userEvent.type(emailInput, dadosValidosUsuario.email);
-//        userEvent.selectOptions
+  test(`O botão "cadastrar" deve estar habilitado, 
+    somente se todos campos estiver preenchido corretamente`,async () => {
+      await act(async () => { render(<FormNewUser />)});
+      expect(getPerfilList).toBeCalled();
+      const nomeInput = screen.getByLabelText(/nome/i);
+      const emailInput = screen.getByLabelText(/email/i);
+      const contatoInput = screen.getByLabelText(/telefone celular/i);
+      const inputSelect = screen.getByLabelText(/perfil de acesso/i);
+      const senhaInput = screen.getByLabelText(/senha/i); 
+      const button = screen.getByRole('button', {name: /cadastrar/i });
+      userEvent.type(nomeInput, dadosValidosUsuario.nome);
+      userEvent.type(emailInput, dadosValidosUsuario.email);      
+      userEvent.type(contatoInput, dadosValidosUsuario.telefone);
+      userEvent.click(inputSelect);
 
-//        userEvent.type(contatoInput, dadosValidosUsuario.telefone);
-//        userEvent.click(perfilSelect);
-//        userEvent.click(screen.getByText(dadosValidosUsuario.perfil));
-//        userEvent.type(senhaInput, dadosValidosUsuario.senha);
-//        expect(button).not.toBeDisabled();
-//    });
-//});
-
-
+      const option = await screen.findByText(/vendedor/i);
+      userEvent.click(option);
+      userEvent.type(senhaInput, dadosValidosUsuario.senha);
+      expect(button).not.toBeDisabled();
+  });
+});

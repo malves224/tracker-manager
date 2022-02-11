@@ -4,7 +4,6 @@ import {
   perfilPermissions
 } from "./mockDatas";
 import storage from "../util/storage/store";
-
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
 // nao é desenvolvido.
 /* istanbul ignore file */
@@ -28,7 +27,14 @@ const getUsersList = () => {
   });
 };
 
-const getPerfilList = () => {
+const getPerfilList = async () => {
+  // try {
+  //  const responsePerfil = await fetch("http://localhost:5000/perfil");
+  //  const data = responsePerfil.json();
+  //  return data;
+  //} catch (error) {
+  //  return {message: error.message};
+  // }
   return new Promise((resolve) => {
     setTimeout(() => {
       const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
