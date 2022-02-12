@@ -1,26 +1,38 @@
 import React from "react";
-import { screen, render } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import { renderWithRouterAndStore } from "../helpers/renderWithRouterAndStore";
 import userEvent from '@testing-library/user-event';
-import { getPerfilList } from "../../mockRequests/mockAPI";
+import { getPerfilList, createUser } from "../../mockRequests/mockAPI";
 import FormNewUser from "../../components/forms/FormNewUser";
 import { act } from "react-dom/test-utils";
 
 jest.mock('../../mockRequests/mockAPI');
+
 
 const mockUser = [
   {id: 1, name: "admin"}, 
   {id: 2, name: "vendedor"}
 ]
 
+const dadosValidosUsuario = {
+  nome: 'ana carolina',
+  cargo: 'operador de cobrança',
+  email: 'ana@yahoo.com',
+  contato: '11912349876',
+  perfilAcesso: 'vendedor',
+  idPerfil: 2,
+  senha: '12345678'
+}
+
 describe('Ao renderizar o "FormNewUser"', () => {
   test('O botão deve estar desabilitado', () => {
-    render(<FormNewUser />);
+    renderWithRouterAndStore(<FormNewUser />);
     const button = screen.getByText(/cadastrar/i);
     expect(button).toBeDisabled();
 
   });
   test('Todos os campos devem estar limpo, e sem nenhum erro de validação', () => {
-    render(<FormNewUser />);
+    renderWithRouterAndStore(<FormNewUser />);
     const nomeInput = screen.getByLabelText(/nome/i);
     const emailInput = screen.getByLabelText(/email/i);
     const contatoInput = screen.getByLabelText(/telefone celular/i);
@@ -35,15 +47,23 @@ describe('Ao renderizar o "FormNewUser"', () => {
 
 describe('Ao digitar nome, Email, Telefone e Senha invalidos,', () => {
   test(`Nome invalido, Input deve estar com a menssagem 'Insira o nome completo'.`, () => {
-      render(<FormNewUser />);
+      renderWithRouterAndStore(<FormNewUser />);
       const nomeInput = screen.getByLabelText(/nome/i);
       userEvent.type(nomeInput, 'Ana');
 
       expect(screen.getByText(/Insira o nome completo/i)).toBeInTheDocument();
 
     });
+    test(`Cargo invalido, Input deve estar com a menssagem 'Insira o cargo ex: aux. administrativo'.`, () => {
+      renderWithRouterAndStore(<FormNewUser />);
+      const cargoInput = screen.getByLabelText(/cargo/i);
+      userEvent.type(cargoInput, 'bb');
+
+      expect(screen.getByText(/Insira o cargo ex: aux. administrativo/i)).toBeInTheDocument();
+
+    });
     test(`Email invalido, Input deve estar com a menssagem 'Insira um email valido ex: lucas@gmail.com'.`, () => {
-      render(<FormNewUser />);
+      renderWithRouterAndStore(<FormNewUser />);
       const emailInput = screen.getByLabelText(/email/i);
 
       userEvent.type(emailInput, 'ana');
@@ -57,7 +77,7 @@ describe('Ao digitar nome, Email, Telefone e Senha invalidos,', () => {
     });
     test(`Telefone celular invalido, Input deve estar com a menssagem 
     'Insira um contato valido ex: 11921497099'.`, () => {
-      render(<FormNewUser />);
+      renderWithRouterAndStore(<FormNewUser />);
       const contatoInput = screen.getByLabelText(/telefone celular/i);
       
       userEvent.type(contatoInput, '90912344321')
@@ -71,7 +91,7 @@ describe('Ao digitar nome, Email, Telefone e Senha invalidos,', () => {
     });
     test(`Senha invalido, Input deve estar com a menssagem 
     'Insira uma senha com ao menos 8 digitos'.`, () => {
-     render(<FormNewUser />);
+     renderWithRouterAndStore(<FormNewUser />);
      const senhaInput = screen.getByLabelText(/senha/i);
 
      userEvent.type(senhaInput, '1234567');
@@ -82,7 +102,7 @@ describe('Ao digitar nome, Email, Telefone e Senha invalidos,', () => {
 
 describe('Ao digitar a senha sem preencher o campo de perfil de acesso', () => {
   test('Deve estar com a menssagem "insira um perfil de acesso"', () => {
-    render(<FormNewUser />);
+    renderWithRouterAndStore(<FormNewUser />);
     const senhaInput = screen.getByLabelText(/senha/i);
     const perfilSelect = screen.getByLabelText(/perfil de acesso/i);
     
@@ -96,14 +116,6 @@ describe('Ao digitar a senha sem preencher o campo de perfil de acesso', () => {
 
 describe(`Ao preencher nome, Email, Telefone, Perfil de 
   acesso e Senha validos,`,() => {
-    
-  const dadosValidosUsuario = {
-    nome: 'ana carolina',
-    email: 'ana@yahoo.com',
-    telefone: '11912349876',
-    perfil: 'vendedor',
-    senha: '12345678'
-  }
 
   beforeEach(async () => {
     await getPerfilList.mockImplementation(() => mockUser);
@@ -111,17 +123,19 @@ describe(`Ao preencher nome, Email, Telefone, Perfil de
 
   test(`O botão "cadastrar" deve estar habilitado, 
     somente se todos campos estiver preenchido corretamente`,async () => {
-      await act(async () => { render(<FormNewUser />)});
+      await act(async () => { renderWithRouterAndStore(<FormNewUser />)});
       expect(getPerfilList).toBeCalled();
       const nomeInput = screen.getByLabelText(/nome/i);
+      const cargoInput = screen.getByLabelText(/cargo/i);
       const emailInput = screen.getByLabelText(/email/i);
       const contatoInput = screen.getByLabelText(/telefone celular/i);
       const inputSelect = screen.getByLabelText(/perfil de acesso/i);
       const senhaInput = screen.getByLabelText(/senha/i); 
       const button = screen.getByRole('button', {name: /cadastrar/i });
       userEvent.type(nomeInput, dadosValidosUsuario.nome);
+      userEvent.type(cargoInput, dadosValidosUsuario.cargo);
       userEvent.type(emailInput, dadosValidosUsuario.email);      
-      userEvent.type(contatoInput, dadosValidosUsuario.telefone);
+      userEvent.type(contatoInput, dadosValidosUsuario.contato);
       userEvent.click(inputSelect);
 
       const option = await screen.findByText(/vendedor/i);
@@ -130,3 +144,46 @@ describe(`Ao preencher nome, Email, Telefone, Perfil de
       expect(button).not.toBeDisabled();
   });
 });
+
+describe('Ao preencher os dados validos, e clicar em cadastrar', () => {
+  
+  beforeEach(async () => {
+    await getPerfilList.mockImplementation(() => mockUser);
+
+  });
+
+  test('Em caso de sucesso deve fazer request para cadastrar usuario, e limpar os campos', async () => {
+    await createUser.mockImplementation(() => Promise.resolve({message: "Usuario criado com sucesso"}));
+
+    await act(async () => { renderWithRouterAndStore(<FormNewUser />)});
+
+    const nomeInput = screen.getByLabelText(/nome/i);
+    const cargoInput = screen.getByLabelText(/cargo/i);
+    const emailInput = screen.getByLabelText(/email/i);
+    const contatoInput = screen.getByLabelText(/telefone celular/i);
+    const inputSelect = screen.getByLabelText(/perfil de acesso/i);
+    const senhaInput = screen.getByLabelText(/senha/i); 
+    const button = screen.getByRole('button', {name: /cadastrar/i });
+
+    userEvent.type(nomeInput, dadosValidosUsuario.nome);
+    userEvent.type(cargoInput, dadosValidosUsuario.cargo);
+    userEvent.type(emailInput, dadosValidosUsuario.email);      
+    userEvent.type(contatoInput, dadosValidosUsuario.contato);
+    userEvent.click(inputSelect);
+
+    const option = await screen.findByText(/vendedor/i);
+    userEvent.click(option);
+    userEvent.type(senhaInput, dadosValidosUsuario.senha);
+    userEvent.click(button);
+
+    expect(createUser).toBeCalledWith(dadosValidosUsuario);
+    await waitFor(() => {
+      expect(nomeInput).toHaveAttribute("value", "");
+      expect(cargoInput).toHaveAttribute("value", "");
+      expect(emailInput).toHaveAttribute("value", "");
+      expect(contatoInput).toHaveAttribute("value", "");
+      expect(senhaInput).toHaveAttribute("value", "");
+    })
+
+   });
+ });
