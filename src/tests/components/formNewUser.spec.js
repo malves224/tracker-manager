@@ -176,7 +176,7 @@ describe('Ao preencher os dados validos, e clicar em cadastrar', () => {
     userEvent.type(senhaInput, dadosValidosUsuario.senha);
     userEvent.click(button);
 
-    expect(createUser).toBeCalledWith(dadosValidosUsuario);
+    expect(createUser).toBeCalledWith(dadosValidosUsuario, 'posiveltokendsadksa');
     await waitFor(() => {
       expect(nomeInput).toHaveAttribute("value", "");
       expect(cargoInput).toHaveAttribute("value", "");
