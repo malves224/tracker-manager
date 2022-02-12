@@ -81,11 +81,26 @@ function FormNewUser({setAlert}) {
     setIdPerfil(id);
   };
 
-  const handleClickButton = () => {  
+  const clearAllInputs = () => {
+    setNewUserData({
+      nome: "",
+      cargo: "",
+      email: "",
+      contato: "",
+      perfilAcesso: "",
+      senha: ""
+    }); 
+    setIdPerfil(0);
+  };
+
+  const handleClickButton = async () => {  
     const userForCreate = {...newUserData, idPerfil};
     createUser(userForCreate)
-      .then((res) => thrownAlert(res.message, "sucess"))
-      .catch((err) => thrownAlert(err.message));
+      .then((res) => {
+        clearAllInputs();
+        thrownAlert(res.message, "success");
+      })
+      .catch((err) => thrownAlert(err.message, "error"));
   }; 
 
   const handleOnBlurSenha = () => {
