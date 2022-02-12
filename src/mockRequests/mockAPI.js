@@ -27,6 +27,31 @@ const getUsersList = () => {
   });
 };
 
+const createUser = ({email, perfilAcesso, idPerfil, nome, contato, senha, cargo}) => {
+  return new Promise((resolve, reject) =>  {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      const userForAdd = {
+        id: usersLocalStorage ? usersLocalStorage[usersLocalStorage.length - 1] + 1 : 1, // id o banco ira controlar
+        cargo,
+        config: { mode: "light" },
+        contato,
+        idPerfil,
+        fullName: nome,
+        login: email,
+        perfil: perfilAcesso,
+        password: senha,
+      };
+      storage.set("users", [...usersLocalStorage, userForAdd]);
+      const userAlreadeExist = usersLocalStorage.some((user) => user.login === email);
+      if (userAlreadeExist) {
+        return reject({message: "Ja existe um usuario com esse email"});
+      }
+      return resolve({message: "Usuario cadasrado com sucesso"});
+    });
+  });
+};
+
 const getPerfilList = async () => {
   // try {
   //  const responsePerfil = await fetch("http://localhost:5000/perfil");
@@ -151,6 +176,7 @@ export {
   authenticationLogin,
   getUsersList,
   getUserById,
+  createUser,
   getPerfilList,
   checkPermission,
   editUserById,
