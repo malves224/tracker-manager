@@ -23,9 +23,11 @@ const checkBeEmpty = (value = "") => {
   return true; 
 };
 
+const checkIfExist =(value) => !value ? false : true;
 
 const validateData = {
   email: checkEmail,
+  cargo: checkIfExist,
   contato: checkCelular,
   senha: checkPassword,
   nome: checkName,

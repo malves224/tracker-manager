@@ -1,9 +1,12 @@
-/* eslint-disable no-unused-vars */
 import { Box, Button, InputLabel, 
   MenuItem, Select, TextField } from "@mui/material";
-import { getPerfilList } from "../../mockRequests/mockAPI"; // MOCK REQUEST
+import { getPerfilList, createUser } from "../../mockRequests/mockAPI"; // MOCK REQUEST
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { validateData } from "../../util/formValidate";
+import { connect } from "react-redux";
+import { throwAlert } from "../../actions";
+
 
 const containerForms = {
   display: "flex", 
@@ -16,6 +19,7 @@ const containerForms = {
 
 const initialStateNewUser = {
   nome: undefined,
+  cargo: undefined,
   email: undefined,
   contato: undefined,
   perfilAcesso: undefined,
@@ -24,6 +28,7 @@ const initialStateNewUser = {
 
 const initialStateDataIsValid = {
   nome: false,
+  cargo: false,
   email: false,
   contato: false,
   perfilAcesso: false,
@@ -31,8 +36,7 @@ const initialStateDataIsValid = {
 };
 
 
-function FormNewUser() {
-  // eslint-disable-next-line no-unused-vars
+function FormNewUser({setAlert}) {
   const [userDataIsValid, setDataIsValid ] = useState(initialStateDataIsValid);
   const [newUserData, setNewUserData ] = useState(initialStateNewUser);
   const [allPerfilAcesso, setAllPerfilAcess] = useState([]);
@@ -51,13 +55,18 @@ function FormNewUser() {
     });
   };
 
+  const thrownAlert = (message, severity = "warning") => setAlert({
+    value: message,
+    severity,
+    open: true,
+  });
+
   const updatePerfilList = async () => {
     try {
       const perfilList = await getPerfilList();
       setAllPerfilAcess(perfilList);
     } catch (error) {
-      console.log(error.message);
-      // implementar setAlertGlobal com a message
+      thrownAlert("Error ao buscar perfis do servidor");
     }
   };
 
@@ -72,9 +81,11 @@ function FormNewUser() {
     setIdPerfil(id);
   };
 
-  const handleClickButton = () => {
-    // enviar info para o servidor com os dados validado
-    console.log(newUserData);
+  const handleClickButton = () => {  
+    const userForCreate = {...newUserData, idPerfil};
+    createUser(userForCreate)
+      .then((res) => thrownAlert(res.message, "sucess"))
+      .catch((err) => thrownAlert(err.message));
   }; 
 
   const handleOnBlurSenha = () => {
@@ -99,6 +110,17 @@ function FormNewUser() {
         value={ newUserData.nome }
         name="nome"
         label="Nome completo *"
+        variant="standard"
+        size="small"
+      />
+      <TextField
+        error={ verifyValidationData("cargo") }
+        helperText={ verifyValidationData("cargo") 
+          && "Insira o cargo ex: aux. administrativo" }
+        onChange={ handleChangeGeneric }
+        value={ newUserData.cargo }
+        name="cargo"
+        label="Cargo *"
         variant="standard"
         size="small"
       />
@@ -187,4 +209,12 @@ function FormNewUser() {
   ;
 }
 
-export default FormNewUser;
+const mapDispatchToProps = (dispatch) => ({
+  setAlert: (payload) => dispatch(throwAlert(payload)),
+});
+
+FormNewUser.propTypes = {
+  setAlert: PropTypes.func,
+};
+
+export default connect(null, mapDispatchToProps)(FormNewUser);
