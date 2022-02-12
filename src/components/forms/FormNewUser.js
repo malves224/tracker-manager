@@ -89,26 +89,39 @@ function FormNewUser({setAlert}) {
       contato: "",
       perfilAcesso: "",
       senha: ""
-    }); 
+    });
+    setDataIsValid(initialStateDataIsValid);
+    setNewUserData(initialStateNewUser);
     setIdPerfil(0);
   };
 
   const handleClickButton = async () => {  
     const userForCreate = {...newUserData, idPerfil};
-    createUser(userForCreate)
+    createUser(userForCreate, "posiveltokendsadksa") // é preciso passar a pagina atual e o token para efetivar a ação
       .then((res) => {
         clearAllInputs();
         thrownAlert(res.message, "success");
       })
       .catch((err) => thrownAlert(err.message, "error"));
-  }; 
+  };
+
+  const returnAllCamposNotFilledInitially = () => {
+    let objToUndefined = {};
+    Object.keys(newUserData)
+      .forEach((key) => {
+        if (newUserData[key] === undefined) {
+          objToUndefined[key] = "";
+        } 
+      });
+    return objToUndefined;
+  };
 
   const handleOnBlurSenha = () => {
-    newUserData.perfilAcesso === undefined 
-      && setNewUserData({
-        ...newUserData,
-        perfilAcesso: ""
-      });
+    const allCamposNotFilled = returnAllCamposNotFilledInitially();
+    setNewUserData({
+      ...newUserData,
+      ...allCamposNotFilled,
+    });
   };
 
   const verifyValidationData = (type) => 
