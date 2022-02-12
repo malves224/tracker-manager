@@ -12,7 +12,7 @@ function UsersList() {
     { field: "login", headerName: "Login", width: 200 },
     { field: "nome", headerName: "Nome", width: 150 },
     { field: "perfil", headerName: "Perfil de acesso", width: 150 },
-    { field: "status", headerName: "Status", width: 150 },
+    { field: "cargo", headerName: "Cargo", width: 150 }
   ]);
   const [rowsData, setRowsData ] = useState([]);
   const [rowsFiltred, setRowsFiltred ] = useState([]);
@@ -30,12 +30,12 @@ function UsersList() {
 
   const requestUser = async () => {
     const response = await getUsersList();
-    const userList = response.map(({id, login, fullName, perfil, status}) => ({
+    const userList = response.map(({id, login, fullName, perfil, cargo}) => ({
       id: id.toString(),
       login,
       nome: fullName,
       perfil,
-      status
+      cargo,
     }));
     // implementar local storage simulando db
     setRowsData(userList);
