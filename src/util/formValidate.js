@@ -23,7 +23,8 @@ const checkBeEmpty = (value = "") => {
   return true; 
 };
 
-const checkIfExist =(value) => !value ? false : true;
+const MIN_LENGTH_CARGO = 3;
+const checkIfExist =(value) => !value || value.length < MIN_LENGTH_CARGO ? false : true;
 
 const validateData = {
   email: checkEmail,
