@@ -16,6 +16,7 @@ function UsersList() {
   ]);
   const [rowsData, setRowsData ] = useState([]);
   const [rowsFiltred, setRowsFiltred ] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
@@ -29,6 +30,7 @@ function UsersList() {
   };
 
   const requestUser = async () => {
+    setLoading(true);
     const response = await getUsersList();
     const userList = response.map(({id, login, fullName, perfil, cargo}) => ({
       id: id.toString(),
@@ -37,7 +39,6 @@ function UsersList() {
       perfil,
       cargo,
     }));
-    // implementar local storage simulando db
     setRowsData(userList);
     return userList;
   };
@@ -58,7 +59,10 @@ function UsersList() {
   };
 
   useEffect(() => {
-    requestUser().then((response) => setRowsFiltred(response));
+    requestUser().then((response) => {
+      setRowsFiltred(response);
+      setLoading(false);
+    });
     return () => {
       setRowsData([]);
     };
@@ -67,6 +71,7 @@ function UsersList() {
   return (
     <div data-testid="users-list">
       <DataGridCustom
+        loading={ loading }
         requestSearch={ requestSearch }
         searchText={ searchText }
         rowsData={ rowsFiltred }

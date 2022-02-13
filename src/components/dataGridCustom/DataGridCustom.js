@@ -8,7 +8,8 @@ import QuickSearchToolbar from "./QuickSearchTolbar";
 import "./style/dataGridCustom.css";
 
 function DataGridCustom({
-  rowsData, columnsData, onClickRow, buttonAdd, requestSearch, searchText}) {
+  rowsData, columnsData, onClickRow, buttonAdd, 
+  requestSearch, searchText, loading}) {
 
   return (
     <Box>
@@ -20,7 +21,7 @@ function DataGridCustom({
         sx={ { padding: "5px"} }
         components={ { Toolbar: QuickSearchToolbar } }
         rows={ rowsData }
-        loading={ rowsData.length === 0 ? true : false }
+        loading={ loading }
         columns={ columnsData }
         componentsProps={ {
           toolbar: {  
@@ -42,6 +43,7 @@ DataGridCustom.propTypes = {
   buttonAdd: PropTypes.func.isRequired,
   requestSearch: PropTypes.func.isRequired,
   searchText: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default DataGridCustom;
