@@ -65,14 +65,17 @@ function UsersList() {
   }, []);
 
   return (
-    <DataGridCustom
-      requestSearch={ requestSearch }
-      searchText={ searchText }
-      rowsData={ rowsFiltred }
-      columnsData={ columns } 
-      onClickRow={ (data) => history.push(`/UserInfo/${data.id}`) }
-      buttonAdd={ buttonAddUser }
-    />
+    <div data-testid="users-list">
+      <DataGridCustom
+        requestSearch={ requestSearch }
+        searchText={ searchText }
+        rowsData={ rowsFiltred }
+        columnsData={ columns } 
+        onClickRow={ (data) => history.push(`/UserInfo/${data.id}`) }
+        buttonAdd={ buttonAddUser }
+      />
+
+    </div>
   );
 }
 export default UsersList;

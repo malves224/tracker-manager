@@ -7,17 +7,21 @@ import PaperResponsive from "../components/PaperResponsive";
 import { UsersList } from ".";
 
 function UsersControl() {
-  const [value, setValue] = React.useState(0);
+  const [currentSubItem, setCurrentSubItem] = React.useState(0);
   const options = [{
     label: "Usuarios",
     component: <UsersList />,
   }, {
-    label: "Perfil de acesso",
-    component: <h1>Perfil de acesso</h1>,
+    label: "Perfis de acesso",
+    component: 
+  <div data-testid="perfil-list">
+    <h1>Perfis de acesso</h1>,
+  </div>
+
   }];
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setCurrentSubItem(newValue);
   };
 
   function a11yProps(index) {
@@ -39,7 +43,7 @@ function UsersControl() {
       >
         <AppBar position="static" color="default">
           <Tabs
-            value={ value }
+            value={ currentSubItem }
             onChange={ handleChange }
             indicatorColor="primary"
             textColor="primary"
@@ -53,7 +57,7 @@ function UsersControl() {
           </Tabs>
         </AppBar>
       </Box>
-      {options[value].component}
+      {options[currentSubItem].component}
     </PaperResponsive>
   );
 }
