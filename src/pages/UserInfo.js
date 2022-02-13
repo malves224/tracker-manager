@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { throwAlert } from "../actions";
+// é preciso simular a função que checa a permisão de ação do usuario para determinado entidade
 
 const initialStateUser = {
   nome: "",
@@ -20,13 +21,15 @@ const initialStateUser = {
 };
 
 const initialStateValidation = {
+  nome: true,
+  cargo: true,
   contato: true,
   email: true,
   perfilAcesso: true,
   senha: true
 };
 
-function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
+function UserInfo({setAlert}) {
   const [userInfo, setUserInfo] = useState(initialStateUser);
   const [idPerfil, setIdPerfil] = useState(0);
   const [validation, setValidation] = useState(initialStateValidation);
@@ -38,15 +41,8 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
 
 
   const requestUser = async () => {
-    const response = await getUserById(parseInt(idUser)); // essa função traz os dados do localStorage
-    setUserInfo({
-      ...initialStateUser,
-      nome: response.nome,
-      cargo: response.cargo,
-      contato: response.contato,
-      email: response.email,
-      perfilAcesso: response.perfilAcesso
-    });
+    const response = await getUserById(idUser); // essa função traz os dados do localStorage
+    setUserInfo(response);
     setIdPerfil(response.idPerfil);
   };
 
@@ -70,13 +66,10 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
       ...userInfo,
       [name]: value,
     });
-  };
-
-  const handleBlurGeneric = ({target}) => {
-    const { name, value } = target;
+    const valueIsValid = validateData.check(name, value);
     setValidation({
       ...validation,
-      [name]: validateData.check(name, value)
+      [name]: valueIsValid,
     });
   };
 
@@ -87,7 +80,7 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
   };
 
   const handleClickEdit = () => {
-    setEditing(true);
+    setEditing(!isEditing);
   };
 
   const handleClickExcluir = async () => {
@@ -128,20 +121,25 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
         thrownAlertNoPermission();
       }
     }
-  }; 
+  };
+
+  const verifyValidationData = (type) => 
+    validation[type] === undefined ? false : !validation[type];
+
  
   return (
     <EditUnicEntity
       tittle="Informações do usuario"
       setEditing={ handleClickEdit }
       isEditing={ isEditing }
-      permissionForEdit={ permissionsToCurrentPage.editing }
-      permissionForDelete={ permissionsToCurrentPage.delete }
+      permisionActionInUnity={ () => ({ edit: true, exclude: true, create: true}) } // SIMULAR FUNÇÃO DE REQEST
       handleClickSave={ handleClickSave }
       handleClickExcluir={ handleClickExcluir }
       handleClickCancel={ handleClickCancel }
     >
       <TextField
+        error={ verifyValidationData("nome") }
+        helperText={ verifyValidationData("nome") && "insira o nome completo" }
         name="nome"
         disabled={ !isEditing }
         label="Nome"
@@ -151,6 +149,7 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
       />
       <TextField
         name="cargo"
+        error={ verifyValidationData("cargo") }
         disabled={ !isEditing }
         label="Cargo"
         onChange={ handleChangeGeneric }
@@ -159,10 +158,11 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
       />
       <TextField
         name="contato"
-        error={ !validation.contato }
+        error={ verifyValidationData("contato") }
         inputProps={ {maxLength: "11"} }
-        helperText={ !validation.contato && "Contato Invalido, Confira o contato" }
-        onBlur={ handleBlurGeneric }
+        helperText={ 
+          verifyValidationData("contato") && "Contato Invalido, Confira o contato" 
+        }
         disabled={ !isEditing }
         label="Contato"
         onChange={ handleChangeGeneric }
@@ -172,9 +172,8 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
       />
       <TextField
         name="email"
-        error={ !validation.email }
-        helperText={ !validation.email && "Email Invalido." }
-        onBlur={ handleBlurGeneric }
+        error={ verifyValidationData("email") }
+        helperText={ verifyValidationData("email") && "Email Invalido." }
         disabled={ !isEditing }
         label="Email"
         onChange={ handleChangeGeneric }
@@ -201,11 +200,10 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
       </Select>
       <TextField
         disabled={ !isEditing }
+        error={ verifyValidationData("senha") }
+        helperText={ verifyValidationData("senha") && "Insira ao menos 8 digitos" }
         name="senha"
         label="Senha"
-        error={ !validation.senha }
-        helperText={ !validation.senha && "Insira ao menos 8 digitos" }
-        onBlur={ handleBlurGeneric }
         onChange={ handleChangeGeneric }
         type="password"
         variant="standard"
@@ -214,23 +212,13 @@ function UserInfo({perfilIdUserLogado, permissionsToCurrentPage, setAlert}) {
     </EditUnicEntity>
   );
 }
-const mapStateToProps = (state) => ({
-  perfilIdUserLogado: state.user.idPerfil,
-  permissionsToCurrentPage: state.user.perfilData.permissions
-    .find(({page}) => page === "UserInfo")
-});
 
 const mapDispatchToProps = (dispatch) => ({
   setAlert: (payload) => dispatch(throwAlert(payload)),
 });
+
 UserInfo.propTypes = {
-  perfilIdUserLogado: PropTypes.number.isRequired,
-  permissionsToCurrentPage: PropTypes.shape({
-    page: PropTypes.string,
-    editing: PropTypes.bool,
-    delete: PropTypes.bool,
-  }),
   setAlert: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
+export default connect(null, mapDispatchToProps)(UserInfo);

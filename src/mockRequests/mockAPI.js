@@ -92,8 +92,8 @@ const getUserById = (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const usersLocalStorage = storage.get("users");
+      const user = usersLocalStorage.filter((user) => user.id === parseInt(id))[0];
       const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
-      const user = usersLocalStorage.filter((user) => user.id === id)[0];
       const userForReturn = {
         nome: user.fullName,
         cargo: user.cargo,
@@ -101,7 +101,7 @@ const getUserById = (id) => {
         email: user.login,
         idPerfil: user.idPerfil,
         perfilAcesso: perfilPermissionsLocalStorage
-          .filter((perfil) => user.idPerfil === perfil.id)[0].name // simulaçao de innerJOin
+          .filter((perfil) => user.idPerfil === perfil.id)[0].name
       };
       resolve(userForReturn);
     }, TIME_RESPONSE);
