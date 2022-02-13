@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-max-depth */
 import { Box, Button, Typography } from "@mui/material";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 import ModalConfirmation from "./ModalConfirmation";
@@ -39,11 +38,29 @@ const sxBtnsEdit = {
   justifyContent: "space-around"
 };
 
+const initialStatePermisionActions = {
+  edit: false,
+  exclude: false,
+  create: false,
+};
+
 
 function EditUnicEntity({children, tittle, setEditing, 
   isEditing, handleClickExcluir, 
-  handleClickSave, handleClickCancel, permissionForEdit, permissionForDelete}) {
+  handleClickSave, handleClickCancel, permisionActionInUnity }) {
   const [openModal, setOpenModal] = useState(false);
+  const [permisionActions, setPermisionActions] = useState(initialStatePermisionActions);
+  
+  const updatePermision =  async () => {
+    const permisionsAction = await permisionActionInUnity();
+    setPermisionActions(permisionsAction);
+  };
+
+  useEffect(() => {
+    updatePermision();
+  }, []);
+  
+  
   return (
     <PaperResponsive>
       <ModalConfirmation
@@ -72,7 +89,7 @@ function EditUnicEntity({children, tittle, setEditing,
           >
             <Button
               sx={ {minWidth: "44px"} }
-              disabled={ !permissionForEdit }
+              disabled={ !permisionActions.edit }
               onClick={ setEditing }
               size="small"
               variant="contained"
@@ -81,7 +98,7 @@ function EditUnicEntity({children, tittle, setEditing,
             </Button>
             <Button
               sx={ {minWidth: "44px"} }
-              disabled={ !permissionForDelete }
+              disabled={ !permisionActions.exclude }
               onClick={ () => setOpenModal(true) }
               size="small"
               color="error"
@@ -89,7 +106,6 @@ function EditUnicEntity({children, tittle, setEditing,
             >
               <DeleteIcon />
             </Button>
-
           </Box>
         </Box>
         <Box sx={ sxBoxForm }>
@@ -117,20 +133,12 @@ function EditUnicEntity({children, tittle, setEditing,
   );
 }
 
-EditUnicEntity.defaultProps = {
-  permissionForEdit: true,
-  permissionForDelete: true
-};
-
-
-
 EditUnicEntity.propTypes = {
   children: PropTypes.node.isRequired,
   tittle: PropTypes.string.isRequired,
   setEditing: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
-  permissionForEdit: PropTypes.bool,
-  permissionForDelete: PropTypes.bool,
+  permisionActionInUnity: PropTypes.func.isRequired,
   handleClickExcluir: PropTypes.func.isRequired,
   handleClickSave: PropTypes.func.isRequired,
   handleClickCancel: PropTypes.func.isRequired,
