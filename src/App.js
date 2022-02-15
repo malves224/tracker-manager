@@ -36,14 +36,18 @@ const lightTheme = createTheme({
   },
 });
 
+const simulationSeedsDb = () => {
+  createLocalUsers();
+  createLocalPerfilPerm();
+};
+
 function App({token, themeMode,alertOpen, messageAlert, 
   severityAlert, setAlert}) {
-  const [userHasToken, setUserToken ] = React.useState(null);
+  const [userHasToken, setUserHasToken ] = React.useState(null);
 
   React.useEffect(() => {
-    setUserToken(token !== null);
-    createLocalUsers();
-    createLocalPerfilPerm();
+    setUserHasToken(token !== null);
+    simulationSeedsDb();
   }, [token]);
 
   return (

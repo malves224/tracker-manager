@@ -1,8 +1,8 @@
-import {  MenuItem, Select, TextField } from "@mui/material";
+import {  InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { validateData } from "../util/formValidate";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { checkPermission, getUserById, 
+import { checkPermissionAction, getUserById, 
   getPerfilList, editUserById, deleteUser } from "../mockRequests/mockAPI";
 import EditUnicEntity from "../components/EditUnicEntity";
 import { connect } from "react-redux";
@@ -57,6 +57,8 @@ function UserInfo({setAlert}) {
     getPerfilList().then((response) => setAllPerfilAcess(response));
     return () => {
       setUserInfo(initialStateUser);
+      setAllPerfilAcess([]);
+      setIdPerfil(0);
     };
   }, []);
 
@@ -84,7 +86,7 @@ function UserInfo({setAlert}) {
   };
 
   const handleClickExcluir = async () => {
-    const hasPermission = await checkPermission(
+    const hasPermission = await checkPermissionAction(
       perfilIdUserLogado, pageCurrent, "delete"); // provavelmente essa verificação sera feito no back
     if (hasPermission) {
       const response = await deleteUser(idUser);
@@ -102,7 +104,7 @@ function UserInfo({setAlert}) {
         open: true});    
     } else {
       const hasPermission = await 
-      checkPermission(perfilIdUserLogado, pageCurrent, "editing");
+      checkPermissionAction(perfilIdUserLogado, pageCurrent, "editing");
       if (hasPermission) {
         try {
           await editUserById(idUser, {...userInfo, idPerfil: idPerfil});
@@ -181,8 +183,12 @@ function UserInfo({setAlert}) {
         variant="standard"
         value={ userInfo.email }
       />
+      <InputLabel id="perfil-label">
+        Perfil de acesso
+      </InputLabel>
       <Select
         disabled={ !isEditing }
+        labelId="perfil-label"
         onChange={ handleChangeGeneric }
         label="Perfil de acesso"
         value={ userInfo.perfilAcesso }

@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import {
   itemsMenu,
   users,
-  perfilPermissions
+  perfilPermissions, 
+  mockInerUserPages
 } from "./mockDatas";
 import storage from "../util/storage/store";
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
@@ -72,18 +74,19 @@ const getPerfilList = async () => {
   });
 };
 
-const checkPermission = (idPerfil, pageForCheck, tipoPerm) => {
+const checkPermissionAcess = (_token, pageForVerify) => {
+  // 1 º verify do jwt
+  // traz todas permission de acesso do usuario
+  const allPermissionAcess = mockInerUserPages; // mock inner join com tabela N:N
+  // verifica se a pageForVerify existe na lista de acesso do usuario
+  const userHasAcesso = allPermissionAcess
+    .some((page) => page === pageForVerify);
+};
+
+const checkPermissionAction = (token, entityToCheck) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const perfilData = perfilPermissions
-        .filter((perfil) => perfil.id === idPerfil);
-
-      const pageData = perfilData[0].permissions
-        .filter((page) => page.page === pageForCheck);
-
-      pageData[0][tipoPerm]
-        ? resolve(true) 
-        : reject(false);
+      // get telas do usuario
     }, TIME_RESPONSE);
   });
 };
@@ -181,7 +184,7 @@ export {
   getUserById,
   createUser,
   getPerfilList,
-  checkPermission,
+  checkPermissionAction,
   editUserById,
   deleteUser
 };
