@@ -2,8 +2,7 @@
 import {
   itemsMenu,
   users,
-  perfilPermissions, 
-  mockInerUserPages
+  perfilPermissions
 } from "./mockDatas";
 import storage from "../util/storage/store";
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
