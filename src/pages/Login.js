@@ -2,9 +2,8 @@ import React, {useState, useEffect} from "react";
 import {  useHistory } from "react-router-dom";
 import storage from "../util/storage/store";
 import { connect } from "react-redux";
-import { setUser } from "../actions";
+import { setUser, throwAlert } from "../actions";
 import PropTypes from "prop-types";
-import { AlertTogle } from "../components";
 import { Container, 
   TextField, Paper, Card, } from "@mui/material";
 import { checkEmail, checkPassword } from "../util/formValidate";
@@ -24,10 +23,9 @@ const initialState = () => ({
   }
 });
 
-function Login({setUserAction}) {
+function Login({setUserAction, setAlert}) {
   const [acesso, setAcesso] = useState(initialState());
   const [isLoading, setLoading ] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
   const navigate = useHistory();
   
   useEffect(() => {
@@ -74,7 +72,7 @@ function Login({setUserAction}) {
           isValid: false
         }
       });
-      setAlertOpen(true);
+      setAlert({value: "Usuario ou senha inválido!", severity: "error", open: true});
     }
     setLoading(false);
   };
@@ -88,12 +86,6 @@ function Login({setUserAction}) {
         height: "calc(100vh)",
       } }
     >
-      <AlertTogle
-        severity="error"
-        switchValue={ [alertOpen, setAlertOpen] }
-      >
-        Não foi possível encontrar um usuário com esse e-mail e senha.      
-      </AlertTogle>
       <Container sx={ {  width: "430px" } }>
         <Card variant="outlined">
           <Container
@@ -142,10 +134,12 @@ function Login({setUserAction}) {
 
 Login.propTypes = {
   setUserAction: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setUserAction: (payload) => dispatch(setUser(payload)),
+  setAlert: (payload) => dispatch(throwAlert(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

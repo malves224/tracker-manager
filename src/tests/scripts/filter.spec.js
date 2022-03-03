@@ -1,5 +1,5 @@
-import { checkPermision, getItemsNavAllowed } from "../util/filter";
-import { itemsMenu, mockPermisions, itemsMenuNoHasNewVehicle } from "../mockRequests/mockDatas";
+import { checkPermision, getItemsNavAllowed } from "../../util/filter";
+import { itemsMenu, mockPermisions, itemsMenuNoHasNewVehicle } from "../../mockRequests/mockDatas";
 
 describe('Testes para função checkPermision, Que verifica se o há permisões para x item do menu', () => {
   it('Verifica se ao passar um item sem permisão retorna "false"', () => {

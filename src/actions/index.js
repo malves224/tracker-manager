@@ -3,6 +3,7 @@
 const ADD_USER = "ADD_USER";
 const LOGOFF_USER = "LOGOFF_USER";
 const SWITCH_MODE = "SWITCH_MODE";
+const THROW_ALERT = "THROW_ALERT";
 
 const setUser = (payload) => ({
   type: ADD_USER,
@@ -18,6 +19,11 @@ const switchMode = (payload) => ({
   payload
 });
 
+const throwAlert = (payload) => ({
+  type: THROW_ALERT,
+  payload
+});
+
 export {
   ADD_USER,
   setUser,
@@ -25,4 +31,6 @@ export {
   logOffUser,
   SWITCH_MODE,
   switchMode,
+  THROW_ALERT,
+  throwAlert,
 };

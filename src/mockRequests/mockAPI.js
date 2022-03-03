@@ -1,5 +1,10 @@
-import { itemsMenu, users, perfilPermissions } from "./mockDatas";
-
+/* eslint-disable no-unused-vars */
+import {
+  itemsMenu,
+  users,
+  perfilPermissions
+} from "./mockDatas";
+import storage from "../util/storage/store";
 // motivo dessas função é simular requisições ao banco de dados enquanto o back end
 // nao é desenvolvido.
 /* istanbul ignore file */
@@ -7,35 +12,178 @@ import { itemsMenu, users, perfilPermissions } from "./mockDatas";
 const TIME_RESPONSE = 700;
 
 const getItemsNav = () => {
-  return new Promise ((resolve) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(itemsMenu);
     }, TIME_RESPONSE);
   });
 };
 
+const getUsersList = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      resolve(usersLocalStorage);
+    }, TIME_RESPONSE);
+  });
+};
+
+const createUser = ({email, perfilAcesso, idPerfil, nome, contato, senha, cargo}) => {
+  return new Promise((resolve, reject) =>  {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      const userAlreadeExist = usersLocalStorage.some((user) => user.login === email);
+      if (userAlreadeExist) {
+        return reject({message: "Ja existe um usuario com esse email"});
+      }
+      const userForAdd = {
+        id: usersLocalStorage 
+          ? usersLocalStorage[usersLocalStorage.length - 1].id + 1 : 1, // id o banco ira controlar
+        cargo,
+        config: { mode: "light" },
+        contato,
+        idPerfil,
+        fullName: nome,
+        login: email,
+        perfil: perfilAcesso,
+        password: senha,
+      };
+      storage.set("users", [...usersLocalStorage, userForAdd]);
+
+
+      return resolve({message: "Usuario cadasrado com sucesso"});
+    });
+  });
+};
+
+const getPerfilList = async () => {
+  // try {
+  //  const responsePerfil = await fetch("http://localhost:5000/perfil");
+  //  const data = responsePerfil.json();
+  //  return data;
+  //} catch (error) {
+  //  return {message: error.message};
+  // }
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
+      const allUser = perfilPermissionsLocalStorage.map(({name, id}) => ({name, id}));
+      resolve(allUser);
+    }, TIME_RESPONSE);
+  });
+};
+
+const checkPermissionAcess = (_token, pageForVerify) => {
+  // 1 º verify do jwt
+  // traz todas permission de acesso do usuario
+  const allPermissionAcess = mockInerUserPages; // mock inner join com tabela N:N
+  // verifica se a pageForVerify existe na lista de acesso do usuario
+  const userHasAcesso = allPermissionAcess
+    .some((page) => page === pageForVerify);
+};
+
+const checkPermissionAction = (token, entityToCheck) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // get telas do usuario
+    }, TIME_RESPONSE);
+  });
+};
+
+const getUserById = (id) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      const user = usersLocalStorage.filter((user) => user.id === parseInt(id))[0];
+      const perfilPermissionsLocalStorage = storage.get("perfilPermissions");
+      const userForReturn = {
+        nome: user.fullName,
+        cargo: user.cargo,
+        contato: user.contato,
+        email: user.login,
+        idPerfil: user.idPerfil,
+        perfilAcesso: perfilPermissionsLocalStorage
+          .filter((perfil) => user.idPerfil === perfil.id)[0].name
+      };
+      resolve(userForReturn);
+    }, TIME_RESPONSE);
+  });
+};
+
+const editUserById = (id, objUserUpdate) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!id || !objUserUpdate){
+        reject(new Error ({message: "id ou dados vazio"}));
+      } else {
+        const usersLocalStorage = storage.get("users");
+        const otherUsers = usersLocalStorage.filter((user) => user.id !== +id);
+        const userById = usersLocalStorage.find((user) => user.id === +id);
+        const userUpdate = {
+          ...userById,
+          fullName: objUserUpdate.nome,
+          idPerfil: !objUserUpdate.idPerfil ? userById.idPerfil : objUserUpdate.idPerfil,
+          cargo: objUserUpdate.cargo,
+          contato: objUserUpdate.contato,
+          login: objUserUpdate.email,
+          password: !objUserUpdate.senha ? userById.password : objUserUpdate.senha,
+        };
+        const newListUser = [...otherUsers, userUpdate];
+        storage.set("users", newListUser);
+        resolve(objUserUpdate);
+      }
+    }, TIME_RESPONSE);
+  });
+};
+
+const deleteUser = (id) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const usersLocalStorage = storage.get("users");
+      const otherUsers = usersLocalStorage.filter((user) => user.id !== +id);
+      const userDeleted = usersLocalStorage.find((user) => user.id === +id);
+      storage.set("users",otherUsers);
+      resolve({message: `Usuario ${userDeleted.fullName} deletado com sucesso`});
+    }, TIME_RESPONSE);
+  });
+};
+
 const authenticationLogin = (login, password) => {
-  return new Promise ((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const user = users.filter((user) => user.login === login); // querry para acessar o user
       if (user.length && user[0].password === password) {
-        const userToOut = {...user[0]};
+        const userToOut = {
+          ...user[0]
+        };
         delete userToOut.password;
         const permissions = perfilPermissions
           .filter((perfil) => userToOut.idPerfil === perfil.id);
         resolve({
           ...userToOut,
-          perfilData: {...permissions[0]},// possivel inner join no db
-          token: "",// simulando token
+          perfilData: {
+            ...permissions[0]
+          }, // possivel inner join no db
+          token: "", // simulando token
         });
       } else {
-        reject({error: "Usuario e senha invalido"});
+        reject({
+          error: "Usuario e senha invalido"
+        });
       }
     }, TIME_RESPONSE);
-  });  
+  });
 };
+
 
 export {
   getItemsNav,
   authenticationLogin,
+  getUsersList,
+  getUserById,
+  createUser,
+  getPerfilList,
+  checkPermissionAction,
+  editUserById,
+  deleteUser
 };

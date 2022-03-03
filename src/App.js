@@ -14,9 +14,15 @@ import { Login,
   UsersControl,
   Financeiro,
   Estoque,
-  ListVehicles} from "./pages";
+  UserInfo,
+  ListVehicles,
+  NewUser} from "./pages";
+import { 
+  createLocalUsers, createLocalPerfilPerm } from "./mockRequests/mockCreateDbStorage";
 import "./App.css";
-import  { ResponsiveDrawer }  from "./components";
+import  { AlertTogle, ResponsiveDrawer }  from "./components";
+import { throwAlert } from "./actions";
+import FormNewUser from "./components/forms/FormNewUser";
 
 const darkTheme = createTheme({
   palette: {
@@ -30,17 +36,30 @@ const lightTheme = createTheme({
   },
 });
 
-function App({token, themeMode}) {
-  const [userHasToken, setUserToken ] = React.useState(null);
+const simulationSeedsDb = () => {
+  createLocalUsers();
+  createLocalPerfilPerm();
+};
+
+function App({token, themeMode,alertOpen, messageAlert, 
+  severityAlert, setAlert}) {
+  const [userHasToken, setUserHasToken ] = React.useState(null);
 
   React.useEffect(() => {
-    setUserToken(token !== null);
+    setUserHasToken(token !== null);
+    simulationSeedsDb();
   }, [token]);
 
   return (
     <ThemeProvider theme={ themeMode === "dark" ? darkTheme : lightTheme }>
       {userHasToken&&
         <ResponsiveDrawer />}
+      <AlertTogle
+        severity={ severityAlert }
+        switchValue={ [alertOpen, setAlert] }
+      >
+        {messageAlert}
+      </AlertTogle>
       <Switch>
         <Route
           exact
@@ -76,20 +95,34 @@ function App({token, themeMode}) {
           render={ () => <RequireAuth><ListAgendamentos /></RequireAuth> }
         />
         <Route
+          exact
           path="/UsersControl"
           render={ () => <RequireAuth><UsersControl /></RequireAuth> }
         />
+        <Route
+          path="/UserInfo/:id"
+          render={ () => <RequireAuth><UserInfo /></RequireAuth> }
+        />
+        <Route
+          exact
+          path="/NewUser"
+          render={ () => <RequireAuth><NewUser /></RequireAuth> }
+        />
+
         <Route
           path="/Financeiro"
           render={ () => <RequireAuth><Financeiro /></RequireAuth> }
         />
         <Route path="/Estoque" render={ () => <RequireAuth><Estoque /></RequireAuth> } />
         <Route
+          path="/sandbox"
+          render={ () => <FormNewUser /> }
+        />
+        <Route
           path="*"
           render={ () =>
             <h1 id="notfound">Not found</h1> }
         />
-
       </Switch>
     </ThemeProvider>
 
@@ -99,6 +132,13 @@ function App({token, themeMode}) {
 const mapStateToProps = (state) => ({
   token: state.user.token,
   themeMode: state.user.config.mode,
+  alertOpen: state.alertGlobal.open,
+  messageAlert: state.alertGlobal.value,
+  severityAlert: state.alertGlobal.severity,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setAlert: (payload) => dispatch(throwAlert(payload)),
 });
 
 App.propTypes = {
@@ -107,6 +147,10 @@ App.propTypes = {
     PropTypes.string,
   ]),
   themeMode: PropTypes.string,
+  alertOpen: PropTypes.bool,
+  messageAlert: PropTypes.string,
+  severityAlert: PropTypes.string,
+  setAlert: PropTypes.func,
 };
 
-export default  connect(mapStateToProps)(App);
+export default  connect(mapStateToProps, mapDispatchToProps)(App);

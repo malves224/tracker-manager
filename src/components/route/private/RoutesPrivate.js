@@ -21,7 +21,10 @@ function RequireAuth({children, getPermissions, setUserAction}) {
     && updateUser();// garante que nao perca o estado global ao atualizar a page  
   
   const hasPermisionAcesso = getPermissions// ideal seria verificar permisão de acesso direto do banco
-    .some((perm) => perm.page === children.type.name);
+    .some((perm) => perm.page === (!children.type.name 
+      ? children.type.WrappedComponent.name
+      :children.type.name  ));// a propriedade name vem de forma diferente caso a pagina esteja utilizando o connect do redux
+
 
   if(hasPermisionAcesso){
     return children;

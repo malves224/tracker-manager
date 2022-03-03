@@ -1,4 +1,4 @@
-import { icons } from "../util/dataIcons";
+import { icons } from "../../util/dataIcons";
 
 describe('testes para função getIcon, que retorna componente de icon do @MUI de acordo com as astribuições', () => {
   const addStyle = { size: "32px"};

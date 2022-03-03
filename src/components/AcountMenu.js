@@ -103,7 +103,9 @@ function AccountMenu({getNameUser, logOff, getTheme, switchTheme}) {
           {`${getTheme === "dark" ? "Light" : "Dark"} mode`}
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem
+          onClick={ () => console.log("redirecionar para pagina de config do usuario") }
+        >
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

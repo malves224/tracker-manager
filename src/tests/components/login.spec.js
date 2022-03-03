@@ -1,9 +1,9 @@
 import React from "react";
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from "../App.js";
-import * as mockRequests from "../mockRequests/mockAPI";
-import { renderWithRouterAndStore } from "./helpers/renderWithRouterAndStore";
+import App from "../../App";
+import * as mockRequests from "../../mockRequests/mockAPI";
+import { renderWithRouterAndStore } from "../helpers/renderWithRouterAndStore";
 
 const PASSWORD_VALID = '12345678';
 const EMAIL_VALID = 'valido@host.com';
@@ -129,7 +129,7 @@ describe('Testas para tela de login', () => {
     userEvent.click(button);
 
     expect(button).toHaveTextContent("Aguarde");
-    const alert = await screen.findByText("Não foi possível encontrar um usuário com esse e-mail e senha.");
+    const alert = await screen.findByText("Usuario ou senha inválido!");
     expect(alert).toBeInTheDocument();
 
     const buttonClose = screen.getByLabelText("close");

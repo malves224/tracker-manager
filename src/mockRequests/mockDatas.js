@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // não excluir, os dados estão sendo utilizados para testes.
 
 const itemsMenu = [
@@ -84,144 +85,257 @@ const itemsMenuNoHasNewVehicle = [
 
 const perfilPermissions = [
   {
-    id: "1",
+    id: 1,
     name: "admin",
     permissions: [
       {
         page: "Home",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "NewClient",
-        write: true,
+        create: true,
       }, 
       {
         page: "ListClients",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       }
       ,
       {
         page: "ListVehicles",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "NewVehicle",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "NewAgendamento",
-        write: true,
+        create: true,
       },
       {
         page: "ListAgendamentos",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "UsersControl",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "Financeiro",
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
       {
         page: "Estoque",
-        hasSubItem: false,
-        write: true,
+        create: true,
         editing: true,
         delete: true,
       },
+      {
+        "page": "UserInfo",
+        "editing": true,
+        "delete": true
+      },
+      {
+        "page": "NewUser",
+        "create": true,
+      },
+    ]
+  },
+  {
+    id: 2,
+    name: "vendedor",
+    permissions: [
+      {
+        page: "Home",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "NewClient",
+        create: true,
+      }, 
+      {
+        page: "ListClients",
+        create: true,
+        editing: true,
+        delete: true,
+      }
+      ,
+      {
+        page: "ListVehicles",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "NewVehicle",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "NewAgendamento",
+        create: true,
+      },
+      {
+        page: "ListAgendamentos",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "UsersControl",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Financeiro",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        page: "Estoque",
+        create: true,
+        editing: true,
+        delete: true,
+      },
+      {
+        "page": "UserInfo",
+        "editing": true,
+        "delete": true
+      },
     ]
   }
+
 ];
 
 const users = [
   {
-    id: "1",
+    id: 1,
+    status: "ativo",
     login: "malves224@gmail.com",
     password: "123456789",
     fullName: "matheus alves",
     contato: "1195666665",
     cargo: "administrador",
     perfil: "admin",
-    idPerfil: "1",
+    idPerfil: 1,
     config : {
       mode: "dark"
     }
+  },
+  {
+    id: 2,
+    status: "ativo",
+    login: "malves224@sgmail.com",
+    password: "123456789",
+    fullName: "theus alves",
+    contato: "1195666665",
+    cargo: "administrador",
+    perfil: "admin",
+    idPerfil: 1,
+    config : {
+      mode: "dark"
+    }
+  },
+  {
+    id: 3,
+    status: "ativo",
+    login: "irineu@sgmail.com",
+    password: "123456789",
+    fullName: "irineu alves",
+    contato: "11956666ds",
+    cargo: "administrador",
+    perfil: "admin",
+    idPerfil: 1,
+    config : {
+      mode: "dark"
+    },
   }
+
 ];
 
 const mockPermisions = [
   {
     "page": "Home",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "NewClient",
-    "write": true
+    "create": true
   },
   {
     "page": "ListClients",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "ListVehicles",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "NewVehicle",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "NewAgendamento",
-    "write": true
+    "create": true
   },
   {
     "page": "ListAgendamentos",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "UsersControl",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "Financeiro",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
   },
   {
     "page": "Estoque",
-    "write": true,
+    "create": true,
     "editing": true,
     "delete": true
-  }
+  },
+  {
+    "page": "UsersList",
+    "create": true,
+    "editing": true,
+    "delete": true
+  },
 ];
 
 export {

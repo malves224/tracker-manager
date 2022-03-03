@@ -1,4 +1,4 @@
-import { checkEmail, checkPassword } from "../util/formValidate";
+import { checkEmail, checkPassword } from "../../util/formValidate";
 
 describe("Testes para função checkEmail", () => { 
   it("Verifica se a função checkEmail retorna 'false' ao digitar um email invalido.", () => {

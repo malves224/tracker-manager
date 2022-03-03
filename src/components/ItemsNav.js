@@ -9,7 +9,6 @@ import { icons } from "../util/dataIcons";
 
 const IndexDivider = 3;
 
-
 function ItemsNav({items, handleDrawerToggle: togle }) {
   const [dropwdownOpen, setdropwdownOpen] = React.useState({
     clientes: false,
@@ -30,13 +29,13 @@ function ItemsNav({items, handleDrawerToggle: togle }) {
         [keyForChange]: !dropwdownOpen[keyForChange]
       });
     } else {
-      navigate.push(route);
+      navigate.replace(`/${route}`);
       togle();
     }
   };
 
   const onClickDropdownSubItem = (route) => {
-    navigate.push(route);
+    navigate.replace(`/${route}`);
     togle();
   };
 

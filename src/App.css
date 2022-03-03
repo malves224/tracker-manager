@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+body {
+  padding: 0 !important;
+  margin: 0;
+}
 .App {
   text-align: center;
 }
